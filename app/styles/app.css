@@ -1,17 +1,33 @@
-:root {
-  --aside-width: 400px;
-  --cart-aside-summary-height-with-discount: 300px;
-  --cart-aside-summary-height: 250px;
-  --grid-item-width: 355px;
-  --header-height: 64px;
-  --color-dark: #000;
-  --color-light: #fff;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+* --------------------------------------------------
+* Fonts
+* --------------------------------------------------
+*/
+
+@font-face {
+  font-family: 'PoppinsL';
+  src: local('PoppinsL'), url('../fonts/Poppins-Light.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'PoppinsBold';
+  src: local('PoppinsBold'), url('../fonts/Poppins-Bold.ttf') format('truetype');
 }
 
+* {
+  transition: 0.3s linear;
+  scroll-behavior: smooth;
+  font-family: 'PoppinsL', sans-serif;
+}
+p {
+  color: #3e3c3c;
+}
 img {
   border-radius: 4px;
 }
-
 /*
 * --------------------------------------------------
 * components/Aside

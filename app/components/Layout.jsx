@@ -17,7 +17,8 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
     <>
       <CartAside cart={cart} />
       <SearchAside />
-      <MobileMenuAside menu={header?.menu} shop={header?.shop} />
+
+      {/* <MobileMenuA      <MobileMenuAside menu={header?.menu} shop={header?.shop} /> */}
       {header && <Header header={header} cart={cart} isLoggedIn={isLoggedIn} />}
       <main>{children}</main>
       <Suspense>
@@ -84,11 +85,7 @@ function MobileMenuAside({menu, shop}) {
     menu &&
     shop?.primaryDomain?.url && (
       <Aside id="mobile-menu-aside" heading="MENU">
-        <HeaderMenu
-          menu={menu}
-          viewport="mobile"
-          primaryDomainUrl={shop.primaryDomain.url}
-        />
+        <HeaderMenu menu={menu} cart={0} />
       </Aside>
     )
   );
@@ -99,11 +96,5 @@ function MobileMenuAside({menu, shop}) {
  *   cart: Promise<CartApiQueryFragment | null>;
  *   children?: React.ReactNode;
  *   footer: Promise<FooterQuery>;
- *   header: HeaderQuery;
- *   isLoggedIn: boolean;
- * }} LayoutProps
- */
-
-/** @typedef {import('storefrontapi.generated').CartApiQueryFragment} CartApiQueryFragment */
 /** @typedef {import('storefrontapi.generated').FooterQuery} FooterQuery */
 /** @typedef {import('storefrontapi.generated').HeaderQuery} HeaderQuery */
