@@ -1,8 +1,9 @@
 import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link} from '@remix-run/react';
-import {Suspense} from 'react';
-import {Image, Money} from '@shopify/hydrogen';
-
+import hero1 from '../assets/AdedayoHS4.jpg';
+import hero2 from '../assets/BOMESI1.jpg';
+import hero3 from '../assets/BOMESI-058.jpg';
+import {FaArrowRightLong} from 'react-icons/fa6';
 /**
  * @type {MetaFunction}
  */
@@ -26,8 +27,8 @@ export default function Homepage() {
   /** @type {LoaderReturnData} */
   const data = useLoaderData();
   return (
-    <div className="home">
-      <FeaturedCollection collection={data.featuredCollection} />
+    <div className="">
+      <LandingMain />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
   );
@@ -38,21 +39,56 @@ export default function Homepage() {
  *   collection: FeaturedCollectionFragment;
  * }}
  */
-function FeaturedCollection({collection}) {
-  if (!collection) return null;
-  const image = collection?.image;
+function LandingMain() {
   return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
-    >
-      {image && (
-        <div className="featured-collection-image">
-          <Image data={image} sizes="100vw" />
+    <div className="w-full min-h-screen  flex flex-row-reverse justify-between items-center px-2 mt-[6em]">
+      <div className="w-[50%] relative min-h-screen flex">
+        <div className="mx-2 h-max">
+          <img
+            src={hero1}
+            alt="HERO1"
+            className=" rounded-lg object-cover h-[20em] my-2 transition-all hover:scale-105 hover:mr-10 hover:mb-4 hover:brightness-110 "
+          />
+          <img
+            src={hero2}
+            alt="HERO2"
+            className="rounded-lg h-[40%] object-cover transition-all hover:scale-105 hover:mr-4 hover:mb-2 hover:brightness-110 "
+          />
         </div>
-      )}
-      <h1>{collection.title}</h1>
-    </Link>
+        <img
+          src={hero3}
+          alt="HERO2"
+          className="w-[20em] rounded-lg object-cover  transition-all hover:scale-105 hover:mr-4 hover:mb-2  "
+        />
+      </div>
+      <div className="w-[45%] px-5 min-h-screen flex flex-col pt-10 justify-center">
+        <div className="-mt-2 relative">
+          <h1 className="text-[3em] font-extrabold leading-[1em]">
+            <span className=" hidden  text-[2em] absolute z-[-29] -top-2 text-[#f9b6b3]">
+              TANTV
+            </span>{' '}
+            The Digital
+            <br /> Home of the <span className="text-brandRed">
+              African
+            </span>{' '}
+            Diaspora.
+          </h1>
+        </div>
+        <p>
+          Explore a rich tapestry of African and multicultural content that
+          informs, inspires, and entertains.
+        </p>
+        <div className="flex">
+          <button className="bg-black  rounded-full py-3 text-white w-fit my-4 mr-1 hover:scale-105 transition-all flex items-center justify-center pr-12 pl-4 relative border-2 border-black hover:bg-white hover:text-black font-semibold">
+            Start Exploring
+            <FaArrowRightLong className="bg-white ml-2 rounded-full text-black px-2 py-2 text-4xl absolute right-2 border-2 border-black" />
+          </button>
+          <button className="bg-brandRed px-10 rounded-full  py-3 text-white w-fit my-4 hover:scale-105 transition-all flex items-center justify-center relative border-2 border-brandRed hover:bg-white hover:text-brandRed font-semibold">
+            Join Us
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -63,9 +99,9 @@ function FeaturedCollection({collection}) {
  */
 function RecommendedProducts({products}) {
   return (
-    <div className="recommended-products">
-      <h2>Recommended Products</h2>
-      <Suspense fallback={<div>Loading...</div>}>
+    <div className="min-h-screen ml-5">
+      <h2 className="text-2xl font-bold ">Recommended Products</h2>
+      {/* <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {({products}) => (
             <div className="recommended-products-grid">
@@ -90,7 +126,7 @@ function RecommendedProducts({products}) {
           )}
         </Await>
       </Suspense>
-      <br />
+      <br /> */}
     </div>
   );
 }

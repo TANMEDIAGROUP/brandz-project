@@ -1,6 +1,12 @@
+import {useState} from 'react';
 import {Await, NavLink} from '@remix-run/react';
 import {Suspense} from 'react';
 import {useRootLoaderData} from '~/root';
+import mainLogo from '../assets/logo-brandz-large.png';
+import {RxCross1} from 'react-icons/rx';
+import {MdOutlineShoppingCart} from 'react-icons/md';
+import {FaSearch} from 'react-icons/fa';
+import {HiMenuAlt3} from 'react-icons/hi';
 
 /**
  * @param {HeaderProps}
@@ -8,16 +14,12 @@ import {useRootLoaderData} from '~/root';
 export function Header({header, isLoggedIn, cart}) {
   const {shop, menu} = header;
   return (
-    <header className="header">
+    <header className=" flex h-[5em] fixed w-[100%] backdrop-blur-md shadow-sm z-[100] items-center px-5 justify-between ">
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
+        <img src={mainLogo} alt="" className="h-5" />
       </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-      />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      <HeaderMenu menu={menu} cart={0} />
+      {/* <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} /> */}
     </header>
   );
 }
@@ -25,59 +27,66 @@ export function Header({header, isLoggedIn, cart}) {
 /**
  * @param {{
  *   menu: HeaderProps['header']['menu'];
+ *   cart:HeaderProps
  *   primaryDomainUrl: HeaderQuery['shop']['primaryDomain']['url'];
  *   viewport: Viewport;
  * }}
  */
-export function HeaderMenu({menu, primaryDomainUrl, viewport}) {
+export function HeaderMenu({menu, cart}) {
+  const [sidemenu, setsidemenu] = useState(
+    ' polygon(100% 0, 100% 0, 100% 100%, 100% 100%)',
+  );
   const {publicStoreDomain} = useRootLoaderData();
-  const className = `header-menu-${viewport}`;
-
-  function closeAside(event) {
-    if (viewport === 'mobile') {
-      event.preventDefault();
-      window.location.href = event.currentTarget.href;
-    }
-  }
+  const navLinks = [
+    'Our Story',
+    'Our Services',
+    'Work With Us!',
+    'Our Clients',
+    'Contact Us',
+  ];
 
   return (
-    <nav className={className} role="navigation">
-      {viewport === 'mobile' && (
-        <NavLink
-          end
-          onClick={closeAside}
-          prefetch="intent"
-          style={activeLinkStyle}
-          to="/"
-        >
-          Home
-        </NavLink>
-      )}
-      {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
-        if (!item.url) return null;
-
-        // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-        return (
-          <NavLink
-            className="header-menu-item"
-            end
-            key={item.id}
-            onClick={closeAside}
-            prefetch="intent"
-            style={activeLinkStyle}
-            to={url}
-          >
-            {item.title}
-          </NavLink>
-        );
-      })}
-    </nav>
+    <div className="">
+      <nav className="header-ctas" role="navigation">
+        {/* 
+      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
+        {isLoggedIn ? 'Account' : 'Sign in'}
+      </NavLink> */}
+        <SearchToggle />
+        <CartToggle cart={cart} />
+        <HiMenuAlt3
+          onClick={() => {
+            setsidemenu(' polygon(100% 0, 0 0, 0 100%, 100% 100%)');
+          }}
+          className="text-3xl transition-all hover:scale-105 hover:text-brandRed"
+        />
+      </nav>
+      <nav
+        className="fixed right-0 bg-brandRed min-w-[40%] min-h-screen top-0 transition-all z-[100]"
+        role="navigation"
+        style={{clipPath: sidemenu}}
+      >
+        <RxCross1
+          className="text-white mt-3 ml-5 text-4xl hover:scale-[1.2] transition-all"
+          onClick={(e) => {
+            setsidemenu('polygon(100% 0, 100% 0, 100% 100%, 100% 100%)');
+          }}
+        />
+        <div className="flex flex-col px-5 pt-12 justify-evenly min-h-[60vh]">
+          {(navLinks || navLinks).map((item) => {
+            return (
+              <NavLink
+                className="text-white text-3xl py-2 font-bold hover:scale-105 transition-all hover:pl-5 hover:border-white border-b-2 border-white hover:decoration-[none]"
+                key={item}
+                to={item}
+              >
+                {item}
+              </NavLink>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
   );
 }
 
@@ -87,33 +96,64 @@ export function HeaderMenu({menu, primaryDomainUrl, viewport}) {
 function HeaderCtas({isLoggedIn, cart}) {
   return (
     <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
+      {/* 
       <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
         {isLoggedIn ? 'Account' : 'Sign in'}
-      </NavLink>
-      <SearchToggle />
-      <CartToggle cart={cart} />
+      </NavLink> */}
     </nav>
   );
 }
 
-function HeaderMenuMobileToggle() {
-  return (
-    <a className="header-menu-mobile-toggle" href="#mobile-menu-aside">
-      <h3>☰</h3>
-    </a>
-  );
-}
-
 function SearchToggle() {
-  return <a href="#search-aside">Search</a>;
+  const [searchbtn, setsearchbtn] = useState('none');
+  const [searchresults, setsearchresults] = useState('none');
+  return (
+    <button className="relative font-bold text-2xl flex flex-row-reverse">
+      <FaSearch
+        className="transition-all hover:scale-105 hover:text-brandRed"
+        onClick={() => {
+          setsearchbtn('grid');
+        }}
+      />
+      <input
+        type="text"
+        name=""
+        id=""
+        style={{display: searchbtn}}
+        autoFocus
+        onChange={() => {
+          setsearchresults('grid');
+        }}
+        className=" absolute top-[-.2em] py-1 border-none  font-thin rounded-full bg-slate-50 px-3 mr-8 focus:outline-[none]"
+        placeholder="search"
+      />
+      <div
+        style={{display: searchresults}}
+        className="fixed w-[100vw] z-[30] shadow-sm backdrop-blur-md bg-[#f6f6f660] left-0 top-[3.2em] min-h-[30vh] "
+      ></div>
+    </button>
+  );
 }
 
 /**
  * @param {{count: number}}
  */
 function CartBadge({count}) {
-  return <a href="#cart-aside">Cart {count}</a>;
+  return (
+    <NavLink
+      className="relative flex  py-2 px-1 transition-all hover:scale-105"
+      to={'/cart'}
+    >
+      <MdOutlineShoppingCart className="text-3xl transition-all hover:scale-105 hover:text-brandRed" />
+      {count && count > 0 ? (
+        <p className="absolute -top-0 -right-1 w-6 h-6 grid justify-center rounded-full bg-black text-white font-bold  z-[4]">
+          {count}
+        </p>
+      ) : (
+        <></>
+      )}
+    </NavLink>
+  );
 }
 
 /**
