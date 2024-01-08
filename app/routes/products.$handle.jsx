@@ -1,21 +1,21 @@
 import {Suspense} from 'react';
 import {defer, redirect} from '@shopify/remix-oxygen';
 import {Await, Link, useLoaderData} from '@remix-run/react';
-
+import {MdOutlineShoppingCartCheckout} from 'react-icons/md';
 import {
-  Image,
   Money,
   VariantSelector,
   getSelectedProductOptions,
   CartForm,
 } from '@shopify/hydrogen';
 import {getVariantUrl} from '~/utils';
+import {ProductCarousel} from './_index';
 
 /**
  * @type {MetaFunction<typeof loader>}
  */
 export const meta = ({data}) => {
-  return [{title: `Hydrogen | ${data?.product.title ?? ''}`}];
+  return [{title: `TanTv | ${data?.product.title ?? ''}`}];
 };
 
 /**
@@ -45,6 +45,7 @@ export async function loader({params, request, context}) {
   const {product} = await storefront.query(PRODUCT_QUERY, {
     variables: {handle, selectedOptions},
   });
+  const recommended = await storefront.query(MORE_PRODUCT_QUERY);
 
   if (!product?.id) {
     throw new Response(null, {status: 404});
@@ -63,7 +64,7 @@ export async function loader({params, request, context}) {
     // if no selected variant was returned from the selected options,
     // we redirect to the first variant's url with it's selected options applied
     if (!product.selectedVariant) {
-      throw redirectToFirstVariant({product, request});
+      throw redirectToFirstVariant({product, request, recommended});
     }
   }
 
@@ -76,7 +77,7 @@ export async function loader({params, request, context}) {
     variables: {handle},
   });
 
-  return defer({product, variants});
+  return defer({product, variants, recommended});
 }
 
 /**
@@ -104,16 +105,22 @@ function redirectToFirstVariant({product, request}) {
 
 export default function Product() {
   /** @type {LoaderReturnData} */
-  const {product, variants} = useLoaderData();
+  const {product, variants, recommended} = useLoaderData();
   const {selectedVariant} = product;
   return (
-    <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <ProductMain
-        selectedVariant={selectedVariant}
-        product={product}
-        variants={variants}
-      />
+    <div className="mt-[6em]">
+      <div className="flex flex-wrap lg:flex-nowrap">
+        <ProductImage image={selectedVariant?.image} />
+        <ProductMain
+          selectedVariant={selectedVariant}
+          product={product}
+          variants={variants}
+        />
+      </div>
+      <div className="mx-4 mt-12 relative">
+        <h2 className="text-4xl font-[PoppinsBold]">Reccomended Products</h2>
+        <ProductCarousel products={recommended.products} />
+      </div>
     </div>
   );
 }
@@ -123,16 +130,14 @@ export default function Product() {
  */
 function ProductImage({image}) {
   if (!image) {
-    return <div className="product-image" />;
+    return <div>something went wrong with the image </div>;
   }
   return (
-    <div className="product-image">
-      <Image
+    <div className="">
+      <img
         alt={image.altText || 'Product Image'}
-        aspectRatio="1/1"
-        data={image}
-        key={image.id}
-        sizes="(min-width: 45em) 50vw, 100vw"
+        src={image.url}
+        className=" mx-auto w-[95%] lg:h-[60vh] lg:w-[50vw] lg:mx-4 object-cover"
       />
     </div>
   );
@@ -148,10 +153,15 @@ function ProductImage({image}) {
 function ProductMain({selectedVariant, product, variants}) {
   const {title, descriptionHtml} = product;
   return (
-    <div className="product-main">
-      <h1>{title}</h1>
-      <ProductPrice selectedVariant={selectedVariant} />
+    <div className="product-main mt-4 lg:w-[50%] mx-8 flex flex-col justify-center ">
+      <h1 className="text-4xl font-[PoppinsBold]">{title}</h1>
+
+      <p>
+        <strong>Description</strong>
+      </p>
       <br />
+      <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+      <ProductPrice selectedVariant={selectedVariant} />
       <Suspense
         fallback={
           <ProductForm
@@ -174,13 +184,6 @@ function ProductMain({selectedVariant, product, variants}) {
           )}
         </Await>
       </Suspense>
-      <br />
-      <br />
-      <p>
-        <strong>Description</strong>
-      </p>
-      <br />
-      <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
       <br />
     </div>
   );
@@ -206,7 +209,12 @@ function ProductPrice({selectedVariant}) {
           </div>
         </>
       ) : (
-        selectedVariant?.price && <Money data={selectedVariant?.price} />
+        selectedVariant?.price && (
+          <Money
+            data={selectedVariant?.price}
+            className="text-2xl font-black"
+          />
+        )
       )}
     </div>
   );
@@ -220,8 +228,9 @@ function ProductPrice({selectedVariant}) {
  * }}
  */
 function ProductForm({product, selectedVariant, variants}) {
+  const isOutOfStock = !selectedVariant?.availableForSale;
   return (
-    <div className="product-form">
+    <div className="">
       <VariantSelector
         handle={product.handle}
         options={product.options}
@@ -229,25 +238,34 @@ function ProductForm({product, selectedVariant, variants}) {
       >
         {({option}) => <ProductOptions key={option.name} option={option} />}
       </VariantSelector>
-      <br />
-      <AddToCartButton
-        disabled={!selectedVariant || !selectedVariant.availableForSale}
-        onClick={() => {
-          window.location.href = window.location.href + '#cart-aside';
-        }}
-        lines={
-          selectedVariant
-            ? [
-                {
-                  merchandiseId: selectedVariant.id,
-                  quantity: 1,
-                },
-              ]
-            : []
-        }
-      >
-        {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
-      </AddToCartButton>
+      <div className="flex ">
+        {isOutOfStock ? (
+          <button className='bg-gray-400 px-5 rounded-full text-white' disabled>
+            Sold out
+          </button>
+        ) : (
+          <AddToCartButton
+            lines={[
+              {
+                merchandiseId: selectedVariant.id,
+                quantity: 1,
+              },
+            ]}
+            variant="primary"
+            data-test="add-to-cart"
+          >
+            <p
+              as="span"
+              className="flex items-center justify-center gap-2 text-white"
+            >
+              Add to Cart
+            </p>
+          </AddToCartButton>
+        )}
+        <button className="py-4 px-8 bg-brandRed rounded-full ml-2 text-white  hover:scale-105">
+          buy now
+        </button>
+      </div>
     </div>
   );
 }
@@ -305,9 +323,11 @@ function AddToCartButton({analytics, children, disabled, lines, onClick}) {
           />
           <button
             type="submit"
-            onClick={onClick}
             disabled={disabled ?? fetcher.state !== 'idle'}
+            onClick={onClick}
+            className="bg-black py-4 px-6 rounded-full text-white flex justify-center items-center hover:scale-105  text-lg mt-2 disabled:bg-slate-300"
           >
+            <MdOutlineShoppingCartCheckout className="text-2xl" />
             {children}
           </button>
         </>
@@ -361,6 +381,14 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     descriptionHtml
     description
+    priceRange {
+      maxVariantPrice {
+        amount
+      }
+      minVariantPrice {
+        amount
+      }
+    }
     options {
       name
       values
@@ -393,6 +421,9 @@ const PRODUCT_QUERY = `#graphql
     }
   }
   ${PRODUCT_FRAGMENT}
+
+
+  
 `;
 
 const PRODUCT_VARIANTS_FRAGMENT = `#graphql
@@ -418,6 +449,31 @@ const VARIANTS_QUERY = `#graphql
     }
   }
 `;
+const MORE_PRODUCT_QUERY = `#graphql
+
+ query Products {
+  products(first: 20) {
+    nodes {
+      id
+      createdAt
+      title
+      description
+      images(first: 1) {
+        nodes {
+          url
+        }
+      }
+      tags
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+      handle
+    }
+  }
+}`;
 
 /** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
 /** @template T @typedef {import('@remix-run/react').MetaFunction<T>} MetaFunction */

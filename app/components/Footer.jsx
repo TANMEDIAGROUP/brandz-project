@@ -96,7 +96,7 @@ function FooterMenu() {
             Send us a message
           </a>
         </div>
-        <div className="text-white border-l-[2px] border-brandRed px-4">
+        <div className="text-white border-l-[2px] border-brandRed px-4 mt-2">
           <h1 className="text-xl font-black">Contact Us</h1>
           <p className="text-lg font-bold text-brandRed">address</p>
           <a
