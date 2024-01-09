@@ -8,7 +8,7 @@ import {FaArrowRightLong} from 'react-icons/fa6';
  * @type {MetaFunction}
  */
 export const meta = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [{title: 'TANTV BRANDZ | Home'}];
 };
 
 /**
