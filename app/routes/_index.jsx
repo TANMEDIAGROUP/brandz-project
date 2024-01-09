@@ -41,27 +41,37 @@ export default function Homepage() {
  */
 function LandingMain() {
   return (
-    <div className="w-full min-h-screen  flex flex-row-reverse justify-between items-center px-2 mt-[6em]">
-      <div className="w-[50%] relative min-h-screen flex">
-        <div className="mx-2 h-max">
+    <div className="w-full min-h-screen  md:flex flex-row-reverse justify-between items-center px-2 mt-[6em]">
+      <div className="md:w-[50%] relative  md:flex ">
+        <div className="mx-2 md:h-max flex md:grid h-[40%]">
           <img
             src={hero1}
             alt="HERO1"
-            className=" rounded-lg object-cover h-[20em] my-2 transition-all hover:scale-105 hover:mr-10 hover:mb-4 hover:brightness-110 "
+            className="w-[50%] md:w-full rounded-lg object-cover md:h-[20em] my-2 transition-all hover:scale-105 hover:mr-10 hover:mb-4 hover:brightness-110 "
           />
           <img
             src={hero2}
             alt="HERO2"
-            className="rounded-lg h-[40%] object-cover transition-all hover:scale-105 hover:mr-4 hover:mb-2 hover:brightness-110 "
+            className="hidden md:grid w-full rounded-lg h-[100%] object-cover transition-all hover:scale-105 hover:mr-4 hover:mb-2 hover:brightness-110 "
+          />
+          <img
+            src={hero3}
+            alt="HERO2"
+            className="grid md:hidden mx-1 w-[50%] rounded-lg object-cover md:h-[20em] my-2 transition-all hover:scale-105 hover:mr-10 hover:mb-4 hover:brightness-110 "
           />
         </div>
         <img
+          src={hero2}
+          alt="HERO2"
+          className="md:hidden rounded-lg w-full object-contain transition-all hover:scale-105 hover:mr-4 hover:mb-2 hover:brightness-110 "
+        />
+        <img
           src={hero3}
           alt="HERO2"
-          className="w-[20em] rounded-lg object-cover  transition-all hover:scale-105 hover:mr-4 hover:mb-2  "
+          className="hidden md:grid  w-[50vw] md:w-[20em] rounded-lg object-cover  transition-all hover:scale-105 hover:mr-4 hover:mb-2 "
         />
       </div>
-      <div className="w-[45%] px-5 min-h-screen flex flex-col pt-10 justify-center">
+      <div className=" md:w-[45%] px-5 md:min-h-screen flex flex-col pt-10 justify-center">
         <div className="-mt-2 relative">
           <h1 className="text-[3em] font-extrabold leading-[1em]">
             <span className=" hidden  text-[2em] absolute z-[-29] -top-2 text-[#f9b6b3]">
@@ -79,11 +89,11 @@ function LandingMain() {
           informs, inspires, and entertains.
         </p>
         <div className="flex">
-          <button className="bg-black  rounded-full py-3 text-white w-fit my-4 mr-1 hover:scale-105 transition-all flex items-center justify-center pr-12 pl-4 relative border-2 border-black hover:bg-white hover:text-black font-semibold">
+          <button className="text-sm md:text-xl bg-black  rounded-full py-3 text-white w-fit my-4 mr-1 hover:scale-105 transition-all flex items-center justify-center pr-12 pl-4 relative border-2 border-black hover:bg-white hover:text-black font-semibold">
             Start Exploring
             <FaArrowRightLong className="bg-white ml-2 rounded-full text-black px-2 py-2 text-4xl absolute right-2 border-2 border-black" />
           </button>
-          <button className="bg-brandRed px-10 rounded-full  py-3 text-white w-fit my-4 hover:scale-105 transition-all flex items-center justify-center relative border-2 border-brandRed hover:bg-white hover:text-brandRed font-semibold">
+          <button className="text-sm md:text-xl bg-brandRed px-10 rounded-full  py-3 text-white w-fit my-4 hover:scale-105 transition-all flex items-center justify-center relative border-2 border-brandRed hover:bg-white hover:text-brandRed font-semibold">
             Join Us
           </button>
         </div>

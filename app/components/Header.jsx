@@ -36,10 +36,11 @@ export function HeaderMenu({menu, cart}) {
   const [sidemenu, setsidemenu] = useState(
     ' polygon(100% 0, 100% 0, 100% 100%, 100% 100%)',
   );
+  const [sideinner, setsideinner] = useState(false);
   const {publicStoreDomain} = useRootLoaderData();
   const navLinks = [
     'Our Story',
-    'Our Services',
+    {'Our Services': ['Service 1', 'Service 2', 'Service 3']},
     'Work With Us!',
     'Our Clients',
     'Contact Us',
@@ -74,15 +75,55 @@ export function HeaderMenu({menu, cart}) {
         />
         <div className="flex flex-col px-5 pt-12 justify-evenly min-h-[60vh]">
           {(navLinks || navLinks).map((item) => {
-            return (
-              <NavLink
-                className="text-white text-3xl py-2 font-bold hover:scale-105 transition-all hover:pl-5 hover:border-white border-b-2 border-white hover:decoration-[none]"
-                key={item}
-                to={item}
-              >
-                {item}
-              </NavLink>
-            );
+            if (typeof item == 'object') {
+              return (
+                <div
+                  onMouseOver={() => {
+                    setsideinner(true);
+                  }}
+                  onMouseLeave={() => {
+                    setsideinner(false);
+                  }}
+                  className="text-white text-3xl py-2 font-bold hover:scale-105 transition-all hover:pl-5 hover:border-white border-b-2 border-white hover:decoration-[none]"
+                >
+                  <NavLink
+                    className="text-white text-3xl py-2 font-bold hover:scale-105 transition-all  w-full grid"
+                    key={item}
+                    to={item}
+                  >
+                    {Object.keys(item)}
+                  </NavLink>
+                  <div
+                    className=" flex flex-col "
+                    style={{
+                      clipPath: !sideinner
+                        ? 'polygon(0 0, 100% 0%, 100% 0, 0 0)'
+                        : 'polygon(0 0, 100% 0%, 100% 100%, 0 100%)',
+                      height: !sideinner ? '0px' : 'fit-content',
+                    }}
+                  >
+                    {item['Our Services'].map((inner) => {
+                      console.log(item);
+                      return (
+                        <NavLink className="text-white text-2xl py-2 font-bold hover:scale-105 transition-all hover:pl-5 hover:border-white border-b-2 border-white hover:decoration-[none] ml-6">
+                          {inner}
+                        </NavLink>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            } else {
+              return (
+                <NavLink
+                  className="text-white text-3xl py-2 font-bold hover:scale-105 transition-all hover:pl-5 hover:border-white border-b-2 border-white hover:decoration-[none]"
+                  key={item}
+                  to={item}
+                >
+                  {item}
+                </NavLink>
+              );
+            }
           })}
         </div>
       </nav>
