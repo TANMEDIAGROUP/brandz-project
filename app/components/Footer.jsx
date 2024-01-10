@@ -1,6 +1,6 @@
 import {NavLink} from '@remix-run/react';
 import {useRootLoaderData} from '~/root';
-
+import footerLogo from '../assets/logo-brandz-large-white.png';
 /**
  * @param {FooterQuery & {shop: HeaderQuery['shop']}}
  */
@@ -24,7 +24,8 @@ function FooterMenu({menu, primaryDomainUrl}) {
   const {publicStoreDomain} = useRootLoaderData();
 
   return (
-    <nav className="footer-menu" role="navigation">
+    <nav className="min-h-[50vh] flex flex-col py-4 px-4" role="navigation">
+      <img className="h-6 w-[12em]" src={footerLogo} alt="" />
       {(menu || FALLBACK_FOOTER_MENU).items.map((item) => {
         if (!item.url) return null;
         // if the url is internal, we strip the domain
@@ -36,7 +37,13 @@ function FooterMenu({menu, primaryDomainUrl}) {
             : item.url;
         const isExternal = !url.startsWith('/');
         return isExternal ? (
-          <a href={url} key={item.id} rel="noopener noreferrer" target="_blank">
+          <a
+            href={url}
+            key={item.id}
+            rel="noopener noreferrer"
+            className="my-2"
+            target="_blank"
+          >
             {item.title}
           </a>
         ) : (
@@ -46,6 +53,7 @@ function FooterMenu({menu, primaryDomainUrl}) {
             prefetch="intent"
             style={activeLinkStyle}
             to={url}
+            className="my-2"
           >
             {item.title}
           </NavLink>
