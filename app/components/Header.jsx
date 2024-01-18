@@ -103,7 +103,6 @@ export function HeaderMenu({menu, cart}) {
                     }}
                   >
                     {item['Our Services'].map((inner) => {
-                      console.log(item);
                       return (
                         <NavLink className="text-white text-2xl py-2 font-bold hover:scale-105 transition-all hover:pl-5 hover:border-white border-b-2 border-white hover:decoration-[none] ml-6">
                           {inner}

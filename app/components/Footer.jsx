@@ -6,7 +6,7 @@ import footerLogo from '../assets/logo-brandz-large-white.png';
  */
 export function Footer({menu, shop}) {
   return (
-    <footer className="footer">
+    <footer className="bg-black mt-[5em]">
       {menu && shop?.primaryDomain?.url && (
         <FooterMenu menu={menu} primaryDomainUrl={shop.primaryDomain.url} />
       )}
