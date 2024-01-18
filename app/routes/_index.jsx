@@ -1,9 +1,11 @@
 import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link} from '@remix-run/react';
+import {HiArrowRight} from 'react-icons/hi';
 import hero1 from '../assets/AdedayoHS4.jpg';
 import hero2 from '../assets/BOMESI1.jpg';
 import hero3 from '../assets/BOMESI-058.jpg';
 import {FaArrowRightLong} from 'react-icons/fa6';
+import {Suspense} from 'react';
 /**
  * @type {MetaFunction}
  */
@@ -16,11 +18,8 @@ export const meta = () => {
  */
 export async function loader({context}) {
   const {storefront} = context;
-  const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
-  const featuredCollection = collections.nodes[0];
-  const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
-
-  return defer({featuredCollection, recommendedProducts});
+  const data = await storefront.query(PRODUCT_QUERY);
+  return data;
 }
 
 export default function Homepage() {
@@ -29,7 +28,7 @@ export default function Homepage() {
   return (
     <div className="">
       <LandingMain />
-      <RecommendedProducts products={data.recommendedProducts} />
+      <RecommendedProducts products={data.products} />
     </div>
   );
 }
@@ -93,7 +92,7 @@ function LandingMain() {
             Start Exploring
             <FaArrowRightLong className="bg-white ml-2 rounded-full text-black px-2 py-2 text-4xl absolute right-2 border-2 border-black" />
           </button>
-          <button className="text-sm md:text-xl bg-brandRed px-10 rounded-full  py-3 text-white w-fit my-4 hover:scale-105 transition-all flex items-center justify-center relative border-2 border-brandRed hover:bg-white hover:text-brandRed font-semibold">
+          <button className="ml-2 text-sm md:text-xl bg-brandRed px-10 rounded-full  py-3 text-white w-fit my-4 hover:scale-105 transition-all flex items-center justify-center relative border-2 border-brandRed hover:bg-white hover:text-brandRed font-semibold">
             Join Us
           </button>
         </div>
@@ -108,9 +107,66 @@ function LandingMain() {
  * }}
  */
 function RecommendedProducts({products}) {
+  console.log(products);
   return (
-    <div className="min-h-screen ml-5">
-      <h2 className="text-2xl font-bold ">Recommended Products</h2>
+    <div className="min-h-screen ml-5 my-4">
+      <h2 className="text-3xl font-extrabold mt-[2em] text-center">
+        Our Services
+      </h2>
+      <div className="text-center">
+        <p>
+          Get fully customised and personalised service packages that suit your
+          wallet
+        </p>
+        <h2 className="font-bold text-xl text-brandRed">
+          Our Customer-Centric Approach
+        </h2>
+        <h3 className="font-extrabold text-2xl">
+          Hyper-Focused Development And Growth
+        </h3>
+        <p className="text-sm my-2 mx-8">
+          TANTV is the leading editorial and subscription streaming service
+          catering to the Africans and multicultural global diaspora. Our
+          mission is to advance the inclusion of African and multicultural
+          diaspora communities in American media; we are doing this by
+          aggregating diaspora voices, and telling stories that inform, inspire,
+          engage and entertain.
+        </p>
+      </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Await resolve={products}>
+          <div className="flex justify-center mt-8">
+            {products.nodes.map(({description, title, id, images}) => {
+              const {url} = images.nodes[0];
+              console.log(url);
+              return (
+                <div
+                  key={id}
+                  className="w-[20em] bg-white mx-2 shadow-2xl pb-4 rounded-md hover:scale-105 transition-all"
+                >
+                  <img
+                    src={url}
+                    alt="service image"
+                    className="h-[20em] object-cover"
+                  />
+                  <div className="px-4 relative py-3 ">
+                    <h1 className="font-extrabold text-xl text-brandRed">
+                      {title}
+                    </h1>
+                    <p className=" text-xs font-extralight text-ellipsis text-wrap line-clamp-3">
+                      {description}
+                    </p>
+                    <button className="bg-black text-brandRed text-sm py-2 px-4 my-2 rounded-full flex items-center">
+                      READ MORE
+                      <HiArrowRight className="text-xl mx-1" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Await>
+      </Suspense>
       {/* <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {({products}) => (
@@ -164,36 +220,22 @@ const FEATURED_COLLECTION_QUERY = `#graphql
   }
 `;
 
-const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  fragment RecommendedProduct on Product {
-    id
-    title
-    handle
-    priceRange {
-      minVariantPrice {
-        amount
-        currencyCode
-      }
-    }
-    images(first: 1) {
-      nodes {
-        id
-        url
-        altText
-        width
-        height
+const PRODUCT_QUERY = `#graphql
+ query Products {
+  products(first: 5) {
+    nodes {
+      id
+      createdAt
+      title
+      description
+      images(first: 1) {
+        nodes {
+          url
+        }
       }
     }
   }
-  query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...RecommendedProduct
-      }
-    }
-  }
-`;
+}`;
 
 /** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
 /** @template T @typedef {import('@remix-run/react').MetaFunction<T>} MetaFunction */
