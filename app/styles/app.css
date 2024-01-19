@@ -1,12 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+:root {
+  --aside-width: 400px;
+  --cart-aside-summary-height-with-discount: 300px;
+  --cart-aside-summary-height: 250px;
+  --grid-item-width: 355px;
+  --header-height: 64px;
+  --color-dark: #000;
+  --color-light: #fff;
+}
 
 img {
   border-radius: 4px;
 }
+* {
+  transition: .5s linear;
+  scroll-behavior: smooth;
+  font-family: 'Roboto', sans-serif;
+}
 
+/*
+* --------------------------------------------------
+* components/Aside
+* --------------------------------------------------
+*/
 aside {
   background: var(--color-light);
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);

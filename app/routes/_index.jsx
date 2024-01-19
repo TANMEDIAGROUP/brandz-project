@@ -1,11 +1,11 @@
 import {defer} from '@shopify/remix-oxygen';
-import {Await, useLoaderData, Link} from '@remix-run/react';
-import {HiArrowRight} from 'react-icons/hi';
+import {Await, useLoaderData} from '@remix-run/react';
+import {HiArrowRight, HiArrowLeft} from 'react-icons/hi';
 import hero1 from '../assets/AdedayoHS4.jpg';
 import hero2 from '../assets/BOMESI1.jpg';
 import hero3 from '../assets/BOMESI-058.jpg';
 import {FaArrowRightLong} from 'react-icons/fa6';
-import {Suspense} from 'react';
+import {Suspense, useEffect, useRef, useState} from 'react';
 /**
  * @type {MetaFunction}
  */
@@ -107,9 +107,41 @@ function LandingMain() {
  * }}
  */
 function RecommendedProducts({products}) {
-  console.log(products);
+  const [data, setdata] = useState([]);
+  const [runtrack, setruntrack] = useState(true);
+  const carouselDiv = useRef();
+  
+  const moveRight = () => {
+    carouselDiv.current.scrollLeft +=
+      carouselDiv.current.scrollLeftMax / (products.nodes.length * 2);
+  };
+    const moveLeft= () => {
+      carouselDiv.current.scrollLeft -=
+        carouselDiv.current.scrollLeftMax / (products.nodes.length * 2);
+    };
+  const slider = setInterval(() => {
+    if (runtrack == true) {
+      moveRight();
+      if (
+        carouselDiv.current.scrollLeft >=
+        carouselDiv.current.scrollWidth - carouselDiv.current.clientWidth
+      ) {
+        carouselDiv.current.style.scrollBehavior = 'unset';
+        carouselDiv.current.scrollLeft = 0;
+        carouselDiv.current.style.scrollBehavior = 'smooth';
+      }
+    }
+  }, 3000);
+  useEffect(() => {
+    setdata((prev) => [...prev, ...products.nodes, ...products.nodes]);
+    if (carouselDiv.current) {
+      carouselDiv.current.scrollLeft = 0;
+    }
+
+    return clearInterval(slider);
+  }, [runtrack]);
   return (
-    <div className="min-h-screen ml-5 my-4">
+    <div className="min-h-screen  my-4">
       <h2 className="text-3xl font-extrabold mt-[2em] text-center">
         Our Services
       </h2>
@@ -135,28 +167,30 @@ function RecommendedProducts({products}) {
       </div>
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
-          <div className="flex justify-center mt-8">
-            {products.nodes.map(({description, title, id, images}) => {
+          <div
+            ref={carouselDiv}
+            className="flex  mt-8 w-[100%] overflow-hidden py-12 flex-nowrap transition-all relative"
+          >
+            {data.map(({description, title, id, images}) => {
               const {url} = images.nodes[0];
-              console.log(url);
               return (
                 <div
                   key={id}
-                  className="w-[20em] bg-white mx-2 shadow-2xl pb-4 rounded-md hover:scale-105 transition-all"
+                  className="min-w-[20em] bg-white mx-2 shadow-2xl  rounded-md hover:scale-105 transition-all scale-y-95"
                 >
                   <img
                     src={url}
                     alt="service image"
-                    className="h-[20em] object-cover"
+                    className="h-[15em] w-full object-cover"
                   />
                   <div className="px-4 relative py-3 ">
-                    <h1 className="font-extrabold text-xl text-brandRed">
+                    <h1 className="font-extrabold text-xl text-brandRed line-clamp-1">
                       {title}
                     </h1>
-                    <p className=" text-xs font-extralight text-ellipsis text-wrap line-clamp-3">
+                    <p className=" text-xs font-extralight text-ellipsis text-wrap line-clamp-3 h-12">
                       {description}
                     </p>
-                    <button className="bg-black text-brandRed text-sm py-2 px-4 my-2 rounded-full flex items-center">
+                    <button className="bg-black text-brandRed text-sm py-2 px-4 mt-2 rounded-full flex items-center">
                       READ MORE
                       <HiArrowRight className="text-xl mx-1" />
                     </button>
@@ -165,34 +199,28 @@ function RecommendedProducts({products}) {
               );
             })}
           </div>
-        </Await>
-      </Suspense>
-      {/* <Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={products}>
-          {({products}) => (
-            <div className="recommended-products-grid">
-              {products.nodes.map((product) => (
-                <Link
-                  key={product.id}
-                  className="recommended-product"
-                  to={`/products/${product.handle}`}
-                >
-                  <Image
-                    data={product.images.nodes[0]}
-                    aspectRatio="1/1"
-                    sizes="(min-width: 45em) 20vw, 50vw"
-                  />
-                  <h4>{product.title}</h4>
-                  <small>
-                    <Money data={product.priceRange.minVariantPrice} />
-                  </small>
-                </Link>
-              ))}
+          <div className="relative min-h-screen">
+            <div className="flex absolute -top-[50%] z-30 w-full justify-between">
+              <button
+                onClick={moveRight}
+                className=" bg-black rounded-full py-2 px-1 text-brandRed  hover:h-[6em] hover:w-[3em] rounded-l-none"
+              >
+                <HiArrowLeft className="text-xl mx-1" />
+              </button>
+              <button
+                className=" bg-black rounded-full py-2 px-1 text-brandRed hover:h-[6em] hover:w-[3em] rounded-r-none"
+                onClick={moveRight}
+                onMouseEnter={() => {
+                  setruntrack((prev) => !prev);
+                  clearInterval(slider);
+                }}
+              >
+                <HiArrowRight className="text-xl mx-1" />
+              </button>
             </div>
-          )}
+          </div>
         </Await>
       </Suspense>
-      <br /> */}
     </div>
   );
 }
