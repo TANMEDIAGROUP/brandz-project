@@ -12,11 +12,11 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
 } from '@remix-run/react';
-import favicon from '../public/favicon.svg';
 import favhead from '../public/logoup.png';
 import resetStyles from './styles/reset.css';
 import appStyles from './styles/app.css';
 import {Layout} from '~/components/Layout';
+import svg404 from './assets/404.svg';
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -35,7 +35,7 @@ export const shouldRevalidate = ({formMethod, currentUrl, nextUrl}) => {
 
   return false;
 };
-
+// setting up assets 
 export function links() {
   return [
     {rel: 'stylesheet', href: resetStyles},
@@ -104,7 +104,7 @@ export async function loader({context}) {
     {headers},
   );
 }
-
+// ----App function
 export default function App() {
   const nonce = useNonce();
   /** @type {LoaderReturnData} */
@@ -115,6 +115,7 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta http-equiv="Content-Security-Policy" />
         <Meta />
         <Links />
       </head>
@@ -130,6 +131,7 @@ export default function App() {
   );
 }
 
+//handling 404s 
 export function ErrorBoundary() {
   const error = useRouteError();
   const rootData = useRootLoaderData();
@@ -154,14 +156,25 @@ export function ErrorBoundary() {
       </head>
       <body>
         <Layout {...rootData}>
-          <div className="route-error">
-            <h1>Oops</h1>
-            <h2>{errorStatus}</h2>
+          <div className="route-error mt-[6em] grid justify-center">
             {errorMessage && (
               <fieldset>
-                <pre>{errorMessage}</pre>
+                <h1 className="text-xl font-[PoppinsBold] text-center">
+                  Oops {errorMessage.split('/')[1]}
+                </h1>
               </fieldset>
             )}
+            <img src={svg404} alt="" className="h-[60vh]" />
+            <button
+              className="bg-brandRed py-2 px-4 text-lg text-white rounded-full hover:scale-105 "
+              onClick={() => {
+                window.history.length <= 2
+                  ? (window.location.href = '/')
+                  : window.history.go(-1);
+              }}
+            >
+              Go back !
+            </button>
           </div>
         </Layout>
         <ScrollRestoration nonce={nonce} />
@@ -206,6 +219,9 @@ async function validateCustomerAccessToken(session, customerAccessToken) {
 
   return {isLoggedIn, headers};
 }
+
+
+
 
 const MENU_FRAGMENT = `#graphql
   fragment MenuItem on MenuItem {

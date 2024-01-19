@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Await, NavLink} from '@remix-run/react';
+import {Await, NavLink, useLoaderData} from '@remix-run/react';
 import {Suspense} from 'react';
 import {useRootLoaderData} from '~/root';
 import mainLogo from '../assets/logo-brandz-large.png';
@@ -11,10 +11,17 @@ import {HiMenuAlt3} from 'react-icons/hi';
 /**
  * @param {HeaderProps}
  */
+
+export async function loaderSearch({context}) {
+  const {storefront} = context;
+  const data = await storefront.query(PREDICTIVESEARCHFORM);
+  return data;
+}
+
 export function Header({header, isLoggedIn, cart}) {
   const {shop, menu} = header;
   return (
-    <header className=" flex h-[5em] fixed w-[100%] backdrop-blur-md shadow-sm z-[100] items-center px-5 justify-between ">
+    <header className=" flex h-[5em] fixed w-[100%] backdrop-blur-md bg-[#ffffff9d] shadow-sm z-[100] items-center px-5 justify-between ">
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
         <img src={mainLogo} alt="" className="h-5" />
       </NavLink>
@@ -39,20 +46,17 @@ export function HeaderMenu({menu, cart}) {
   const [sideinner, setsideinner] = useState(false);
   const {publicStoreDomain} = useRootLoaderData();
   const navLinks = [
-    'Our Story',
-    {'Our Services': ['Service 1', 'Service 2', 'Service 3']},
-    'Work With Us!',
-    'Our Clients',
-    'Contact Us',
+    {'Our Story': '#OurStory'},
+    {'Our Services': '#OurServices'},
+    // {'Our Services': ['Service 1', 'Service 2', 'Service 3']},
+    // {'Work With Us!': ''},
+    {'Our Clients': '#OurClients'},
+    {'Contact Us': ''},
   ];
 
   return (
     <div className="">
       <nav className="header-ctas" role="navigation">
-        {/* 
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        {isLoggedIn ? 'Account' : 'Sign in'}
-      </NavLink> */}
         <SearchToggle />
         <CartToggle cart={cart} />
         <HiMenuAlt3
@@ -75,7 +79,10 @@ export function HeaderMenu({menu, cart}) {
         />
         <div className="flex flex-col px-5 pt-12 justify-evenly min-h-[60vh]">
           {(navLinks || navLinks).map((item) => {
-            if (typeof item == 'object') {
+            if (
+              typeof item == 'object' &&
+              Object.keys(item).includes('Services')
+            ) {
               return (
                 <div
                   onMouseOver={() => {
@@ -88,8 +95,8 @@ export function HeaderMenu({menu, cart}) {
                 >
                   <NavLink
                     className="text-white text-3xl py-2 font-bold hover:scale-105 transition-all  w-full grid"
-                    key={item}
-                    to={item}
+                    key={Object.keys(item)}
+                    to={'#OurServices'}
                   >
                     {Object.keys(item)}
                   </NavLink>
@@ -116,10 +123,9 @@ export function HeaderMenu({menu, cart}) {
               return (
                 <NavLink
                   className="text-white text-3xl py-2 font-bold hover:scale-105 transition-all hover:pl-5 hover:border-white border-b-2 border-white hover:decoration-[none]"
-                  key={item}
-                  to={item}
+                  to={item[Object.keys(item)]}
                 >
-                  {item}
+                  {Object.keys(item)}
                 </NavLink>
               );
             }
@@ -130,23 +136,10 @@ export function HeaderMenu({menu, cart}) {
   );
 }
 
-/**
- * @param {Pick<HeaderProps, 'isLoggedIn' | 'cart'>}
- */
-function HeaderCtas({isLoggedIn, cart}) {
-  return (
-    <nav className="header-ctas" role="navigation">
-      {/* 
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        {isLoggedIn ? 'Account' : 'Sign in'}
-      </NavLink> */}
-    </nav>
-  );
-}
-
 function SearchToggle() {
   const [searchbtn, setsearchbtn] = useState('none');
   const [searchresults, setsearchresults] = useState('none');
+
   return (
     <button className="relative font-bold text-2xl flex flex-row-reverse">
       <FaSearch
@@ -272,3 +265,21 @@ function activeLinkStyle({isActive, isPending}) {
 
 /** @typedef {import('storefrontapi.generated').HeaderQuery} HeaderQuery */
 /** @typedef {import('./Layout').LayoutProps} LayoutProps */
+
+const PREDICTIVESEARCHFORM = `#graphql
+ query Products {
+  products(first: 20) {
+    nodes {
+      id
+      createdAt
+      title
+      description
+      images(first: 1) {
+        nodes {
+          url
+        }
+      }
+    }
+  }
+}
+`;
