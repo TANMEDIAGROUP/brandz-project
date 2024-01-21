@@ -1784,7 +1784,7 @@ interface GeneratedQueryTypes {
     return: FeaturedCollectionQuery;
     variables: FeaturedCollectionQueryVariables;
   };
-  '#graphql\n query Products {\n  products(first: 5) {\n    nodes {\n      id\n      createdAt\n      title\n      description\n      images(first: 1) {\n        nodes {\n          url\n        }\n      }\n    }\n  }\n}': {
+  '#graphql\n query Products {\n  products(first: 20) {\n    nodes {\n      id\n      createdAt\n      title\n      description\n      images(first: 1) {\n        nodes {\n          url\n        }\n      }\n    }\n  }\n}': {
     return: ProductsQuery;
     variables: ProductsQueryVariables;
   };

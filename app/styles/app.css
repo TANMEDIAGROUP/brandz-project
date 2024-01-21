@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 :root {
   --aside-width: 400px;
   --cart-aside-summary-height-with-discount: 300px;
@@ -11,11 +10,38 @@
   --color-dark: #000;
   --color-light: #fff;
 }
+/*
+* --------------------------------------------------
+* Fonts
+* --------------------------------------------------
+*/
 
+@font-face {
+  font-family: 'PoppinsL';
+  src: local('PoppinsL'), url('../fonts/Poppins-Light.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'PoppinsBold';
+  src: local('PoppinsBold'), url('../fonts/Poppins-Bold.ttf') format('truetype');
+}
+
+* {
+  transition: 0.5s linear;
+  scroll-behavior: smooth;
+  font-family: 'PoppinsL', sans-serif;
+}
+
+p {
+  color: #3e3c3c;
+}
 img {
   border-radius: 4px;
 }
-
+/*
+* --------------------------------------------------
+* components/Aside
+* --------------------------------------------------
+*/
 aside {
   background: var(--color-light);
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
