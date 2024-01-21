@@ -14,7 +14,7 @@ import {HiMenuAlt3} from 'react-icons/hi';
 export function Header({header, isLoggedIn, cart}) {
   const {shop, menu} = header;
   return (
-    <header className=" flex h-[5em] fixed w-[100%] backdrop-blur-md shadow-sm z-[100] items-center px-5 justify-between ">
+    <header className=" flex h-[5em] fixed w-[100%] backdrop-blur-md bg-[#ffffff9d] shadow-sm z-[100] items-center px-5 justify-between ">
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
         <img src={mainLogo} alt="" className="h-5" />
       </NavLink>

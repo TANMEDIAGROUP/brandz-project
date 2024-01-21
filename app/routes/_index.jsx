@@ -6,6 +6,13 @@ import hero2 from '../assets/BOMESI1.jpg';
 import hero3 from '../assets/BOMESI-058.jpg';
 import {FaArrowRightLong} from 'react-icons/fa6';
 import {Suspense, useEffect, useRef, useState} from 'react';
+//place holder
+import img1 from '../assets/clients/1.jpg';
+import img2 from '../assets/clients/2.png';
+import img3 from '../assets/clients/3.png';
+import img4 from '../assets/clients/4.png';
+import img5 from '../assets/clients/5.jpg';
+
 /**
  * @type {MetaFunction}
  */
@@ -29,6 +36,7 @@ export default function Homepage() {
     <div className="">
       <LandingMain />
       <RecommendedProducts products={data.products} />
+      <ClientSection />
     </div>
   );
 }
@@ -72,12 +80,13 @@ function LandingMain() {
       </div>
       <div className=" md:w-[45%] px-5 md:min-h-screen flex flex-col pt-10 justify-center">
         <div className="-mt-2 relative">
-          <h1 className="text-[3em] font-extrabold leading-[1em]">
+          <h1 className="text-[3em] font-[PoppinsBold] text-black leading-[1em]">
             <span className=" hidden  text-[2em] absolute z-[-29] -top-2 text-[#f9b6b3]">
               TANTV
             </span>{' '}
             The Digital
-            <br /> Home of the <span className="text-brandRed">
+            <br /> Home of the{' '}
+            <span className="text-brandRed font-[PoppinsBold]">
               African
             </span>{' '}
             Diaspora.
@@ -108,18 +117,19 @@ function LandingMain() {
  */
 function RecommendedProducts({products}) {
   const [data, setdata] = useState([]);
-  const [runtrack, setruntrack] = useState(true);
+  const [runtrack, setruntrack] = useState(null);
   const carouselDiv = useRef();
-  
+
   const moveRight = () => {
     carouselDiv.current.scrollLeft +=
+      carouselDiv.current.scrollLeftMax / (products.nodes.length * 2 + 4);
+  };
+  const moveLeft = () => {
+    carouselDiv.current.scrollLeft -=
       carouselDiv.current.scrollLeftMax / (products.nodes.length * 2);
   };
-    const moveLeft= () => {
-      carouselDiv.current.scrollLeft -=
-        carouselDiv.current.scrollLeftMax / (products.nodes.length * 2);
-    };
   const slider = setInterval(() => {
+    console.log('slider_____', runtrack);
     if (runtrack == true) {
       moveRight();
       if (
@@ -131,21 +141,21 @@ function RecommendedProducts({products}) {
         carouselDiv.current.style.scrollBehavior = 'smooth';
       }
     }
-  }, 3000);
+  }, 5000);
   useEffect(() => {
-    setdata((prev) => [...prev, ...products.nodes, ...products.nodes]);
+    setdata((prev) => [...prev, ...products.nodes]);
     if (carouselDiv.current) {
-      carouselDiv.current.scrollLeft = 0;
+      carouselDiv.current.scrollLeft = 200;
     }
-
     return clearInterval(slider);
-  }, [runtrack]);
+  }, []);
   return (
     <div className="min-h-screen  my-4">
-      <h2 className="text-3xl font-extrabold mt-[2em] text-center">
+      <h2 className="text-3xl font-extrabold mt-[2em] text-center font-[PoppinsBold] text-black">
         Our Services
       </h2>
-      <div className="text-center">
+
+      <div className="text-center ">
         <p>
           Get fully customised and personalised service packages that suit your
           wallet
@@ -165,66 +175,134 @@ function RecommendedProducts({products}) {
           engage and entertain.
         </p>
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={products}>
-          <div
-            ref={carouselDiv}
-            className="flex  mt-8 w-[100%] overflow-hidden py-12 flex-nowrap transition-all relative"
-          >
-            {data.map(({description, title, id, images}) => {
-              const {url} = images.nodes[0];
-              return (
-                <div
-                  key={id}
-                  className="min-w-[20em] bg-white mx-2 shadow-2xl  rounded-md hover:scale-105 transition-all scale-y-95"
-                >
-                  <img
-                    src={url}
-                    alt="service image"
-                    className="h-[15em] w-full object-cover"
-                  />
-                  <div className="px-4 relative py-3 ">
-                    <h1 className="font-extrabold text-xl text-brandRed line-clamp-1">
-                      {title}
-                    </h1>
-                    <p className=" text-xs font-extralight text-ellipsis text-wrap line-clamp-3 h-12">
-                      {description}
-                    </p>
-                    <button className="bg-black text-brandRed text-sm py-2 px-4 mt-2 rounded-full flex items-center">
-                      READ MORE
-                      <HiArrowRight className="text-xl mx-1" />
-                    </button>
+      {/* background art */}
+      <div className="relative overflow-hidden ">
+        <div className="absolute -right-4 top-[0%] -z-10 overflow-hidden h-[100vh] flex flex-col justify-center ">
+          <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+          <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+          <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+          <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+          <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+          <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-14"></div>
+          <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+          <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+          <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+          <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+          <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+          <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+        </div>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Await resolve={products}>
+            <div
+              ref={carouselDiv}
+              className="flex  w-[100%] overflow-hidden items-center min-h-screen flex-nowrap transition-all relative"
+            >
+              {data.map(({description, title, id, images}) => {
+                const {url} = images.nodes[0];
+                return (
+                  <div
+                    key={id}
+                    className="min-w-[16em] backdrop-blur-sm bg-[#ffffffca] mx-3 shadow-[2px_2px_20px_#aaaaaa97]  rounded-md hover:scale-105 transition-all scale-y-95 z-10 "
+                  >
+                    <img
+                      src={url}
+                      alt="service image"
+                      className="h-[15em] w-full object-cover"
+                    />
+                    <div className="px-4 relative py-3 ">
+                      <h1 className="font-extrabold text-xl text-black line-clamp-1">
+                        {title}
+                      </h1>
+                      <p className=" text-xs font-extralight text-ellipsis text-wrap line-clamp-3 h-12">
+                        {description}
+                      </p>
+                      <button className="bg-black text-brandRed text-sm py-2 px-4 mt-2 rounded-full flex items-center">
+                        SUBSCRIBE
+                        <HiArrowRight className="text-xl mx-1" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="relative min-h-screen">
-            <div className="flex absolute -top-[50%] z-30 w-full justify-between">
-              <button
-                onClick={moveRight}
-                className=" bg-black rounded-full py-2 px-1 text-brandRed  hover:h-[6em] hover:w-[3em] rounded-l-none"
-              >
-                <HiArrowLeft className="text-xl mx-1" />
-              </button>
-              <button
-                className=" bg-black rounded-full py-2 px-1 text-brandRed hover:h-[6em] hover:w-[3em] rounded-r-none"
-                onClick={moveRight}
-                onMouseEnter={() => {
-                  setruntrack((prev) => !prev);
-                  clearInterval(slider);
-                }}
-              >
-                <HiArrowRight className="text-xl mx-1" />
-              </button>
+                );
+              })}
             </div>
-          </div>
-        </Await>
-      </Suspense>
+            <div className="absolute w-full min-h-screen bg-black">
+              <div className="flex absolute -top-[50%] z-30 w-full justify-between">
+                <button
+                  onClick={moveLeft}
+                  className=" bg-brandRed rounded-full py-4 px-1 text-black  hover:h-[6em] hover:w-[3em] rounded-l-none transition-all h-12"
+                >
+                  <HiArrowLeft className="text-xl mx-1" />
+                </button>
+                <button
+                  className=" bg-brandRed rounded-full py-4 px-1 text-black hover:h-[6em] hover:w-[3em] rounded-r-none transition-all h-12"
+                  onClick={moveRight}
+                  onMouseEnter={() => {
+                    setruntrack(false);
+                    clearInterval(slider);
+                  }}
+                >
+                  <HiArrowRight className="text-xl mx-1" />
+                </button>
+              </div>
+            </div>
+          </Await>
+        </Suspense>
+      </div>
     </div>
   );
 }
+const ClientSection = () => {
+  var newsMedia = [
+    {
+      name: 'The Wall Street Journal',
+      logo: img5,
+    },
+    {
+      name: 'Comcast',
+      logo: img2,
+    },
+    {
+      name: 'The New York Times',
+      logo: img3,
+    },
+    {
+      name: 'Washignton Post',
+      logo: img4,
+    },
+    {
+      name: 'Mekay Foods',
+      logo: img1,
+    },
+  ];
 
+  return (
+    <div className="  mb-4 grid justify-center">
+      <h2 className="text-3xl font-extrabold text-center font-[PoppinsBold] text-black">
+        Our Clients
+      </h2>
+      <p className="mx-5 text-sm text-center">
+        At TANTV, our clients are our top priority. We offer fully customized
+        and budget-friendly service packages designed just for you. With a
+        customer-centric approach and a focus on development and growth, we are
+        committed to exceeding your expectations. As a leading editorial and
+        subscription streaming service, we cater to Africans and the
+        multicultural global diaspora. Our mission is to advance the inclusion
+        of these communities in American media by sharing their voices and
+        telling compelling stories. Join us for a personalized and enriching
+        experience at TANTV.
+      </p>
+      <div className="flex justify-center flex-wrap mt-6">
+        {[...newsMedia, ...newsMedia.reverse()].map(({name, logo}) => {
+          return (
+            <div>
+              <img src={logo} alt="logo" className="w-[10em] mx-4 " />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {
     id
@@ -250,7 +328,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
 
 const PRODUCT_QUERY = `#graphql
  query Products {
-  products(first: 5) {
+  products(first: 20) {
     nodes {
       id
       createdAt
