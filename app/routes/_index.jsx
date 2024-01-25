@@ -1,4 +1,3 @@
-import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData} from '@remix-run/react';
 import {HiArrowRight, HiArrowLeft} from 'react-icons/hi';
 import hero1 from '../assets/AdedayoHS4.jpg';
@@ -23,7 +22,7 @@ export const meta = () => {
 /**
  * @param {LoaderFunctionArgs}
  */
-export async function loader({context}) {
+export async function loader({params, context}) {
   const {storefront} = context;
   const data = await storefront.query(PRODUCT_QUERY);
   return data;
@@ -31,7 +30,7 @@ export async function loader({context}) {
 
 export default function Homepage() {
   /** @type {LoaderReturnData} */
-  const data = useLoaderData();
+  const data = useLoaderData(loader());
   return (
     <div className="">
       <LandingMain />
@@ -115,43 +114,62 @@ function LandingMain() {
  *   products: Promise<RecommendedProductsQuery>;
  * }}
  */
+
+const canvasArt = () => (
+  <div className="absolute -right-4 top-[0%] -z-10 overflow-hidden h-[100vh] flex flex-col justify-center ">
+    <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+    <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+    <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+    <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+    <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+    <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-14"></div>
+    <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+    <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+    <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+    <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+    <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+    <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+  </div>
+);
 function RecommendedProducts({products}) {
   const [data, setdata] = useState([]);
-  const [runtrack, setruntrack] = useState(null);
   const carouselDiv = useRef();
 
   const moveRight = () => {
+    console.log('right move', carouselDiv);
     carouselDiv.current.scrollLeft +=
-      carouselDiv.current.scrollLeftMax / (products.nodes.length * 2 + 4);
+      carouselDiv.current.scrollWidth / (products.nodes.length * 2 + 4);
   };
   const moveLeft = () => {
     carouselDiv.current.scrollLeft -=
-      carouselDiv.current.scrollLeftMax / (products.nodes.length * 2);
+      carouselDiv.current.scrollWidth / (products.nodes.length * 2);
   };
-  const slider = setInterval(() => {
-    console.log('slider_____', runtrack);
-    if (runtrack == true) {
-      moveRight();
-      if (
-        carouselDiv.current.scrollLeft >=
-        carouselDiv.current.scrollWidth - carouselDiv.current.clientWidth
-      ) {
-        carouselDiv.current.style.scrollBehavior = 'unset';
-        carouselDiv.current.scrollLeft = 0;
-        carouselDiv.current.style.scrollBehavior = 'smooth';
-      }
-    }
-  }, 5000);
+  // const slider = setInterval(() => {
+  //   console.log('slider_____', runtrack);
+  //   if (runtrack == true) {
+  //     moveRight();
+  //     if (
+  //       carouselDiv.current.scrollLeft >=
+  //       carouselDiv.current.scrollWidth - carouselDiv.current.clientWidth
+  //     ) {
+  //       carouselDiv.current.style.scrollBehavior = 'unset';
+  //       carouselDiv.current.scrollLeft = 0;
+  //       carouselDiv.current.style.scrollBehavior = 'smooth';
+  //     }
+  //   }
+  // }, 5000);
   useEffect(() => {
     setdata((prev) => [...prev, ...products.nodes]);
     if (carouselDiv.current) {
       carouselDiv.current.scrollLeft = 200;
     }
-    return clearInterval(slider);
   }, []);
   return (
     <div className="min-h-screen  my-4">
-      <h2 className="text-3xl font-extrabold mt-[2em] text-center font-[PoppinsBold] text-black">
+      <h2
+        className="text-3xl font-extrabold mt-[2em] text-center font-[PoppinsBold] text-black"
+        id="OurServices"
+      >
         Our Services
       </h2>
 
@@ -177,20 +195,7 @@ function RecommendedProducts({products}) {
       </div>
       {/* background art */}
       <div className="relative overflow-hidden ">
-        <div className="absolute -right-4 top-[0%] -z-10 overflow-hidden h-[100vh] flex flex-col justify-center ">
-          <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
-          <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
-          <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
-          <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
-          <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
-          <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-14"></div>
-          <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
-          <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
-          <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
-          <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
-          <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
-          <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
-        </div>
+        <canvasArt />
         <Suspense fallback={<div>Loading...</div>}>
           <Await resolve={products}>
             <div
@@ -236,10 +241,6 @@ function RecommendedProducts({products}) {
                 <button
                   className=" bg-brandRed rounded-full py-4 px-1 text-black hover:h-[6em] hover:w-[3em] rounded-r-none transition-all h-12"
                   onClick={moveRight}
-                  onMouseEnter={() => {
-                    setruntrack(false);
-                    clearInterval(slider);
-                  }}
                 >
                   <HiArrowRight className="text-xl mx-1" />
                 </button>
@@ -277,7 +278,10 @@ const ClientSection = () => {
 
   return (
     <div className="  mb-4 grid justify-center">
-      <h2 className="text-3xl font-extrabold text-center font-[PoppinsBold] text-black">
+      <h2
+        className="text-3xl font-extrabold text-center font-[PoppinsBold] text-black"
+        id="OurClients"
+      >
         Our Clients
       </h2>
       <p className="mx-5 text-sm text-center">
