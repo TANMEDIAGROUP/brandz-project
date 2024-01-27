@@ -138,11 +138,11 @@ function RecommendedProducts({products}) {
   const moveRight = () => {
     console.log('right move', carouselDiv);
     carouselDiv.current.scrollLeft +=
-      carouselDiv.current.scrollWidth / (products.nodes.length * 2 + 4);
+      carouselDiv.current.scrollWidth / products.nodes.length;
   };
   const moveLeft = () => {
     carouselDiv.current.scrollLeft -=
-      carouselDiv.current.scrollWidth / (products.nodes.length * 2);
+      carouselDiv.current.scrollWidth / products.nodes.length 
   };
   // const slider = setInterval(() => {
   //   console.log('slider_____', runtrack);
