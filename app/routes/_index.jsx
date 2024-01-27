@@ -92,8 +92,8 @@ function LandingMain() {
           </h1>
         </div>
         <p>
-          Explore a rich tapestry of African and multicultural content that
-          informs, inspires, and entertains.
+        Unconventional media company, catering to the 47million diverse African and Black Multicultural Diaspora - we help brands who dare to connect with America’ fastest growing audience.
+
         </p>
         <div className="flex">
           <button className="text-sm md:text-xl bg-black  rounded-full py-3 text-white w-fit my-4 mr-1 hover:scale-105 transition-all flex items-center justify-center pr-12 pl-4 relative border-2 border-black hover:bg-white hover:text-black font-semibold">
@@ -175,22 +175,22 @@ function RecommendedProducts({products}) {
 
       <div className="text-center ">
         <p>
-          Get fully customised and personalised service packages that suit your
-          wallet
+        Strategic Foundations:
+
         </p>
         <h2 className="font-bold text-xl text-brandRed">
-          Our Customer-Centric Approach
+          
+        Content Solutions
         </h2>
+
         <h3 className="font-extrabold text-2xl">
           Hyper-Focused Development And Growth
         </h3>
         <p className="text-sm my-2 mx-8">
           TANTV is the leading editorial and subscription streaming service
-          catering to the Africans and multicultural global diaspora. Our
-          mission is to advance the inclusion of African and multicultural
-          diaspora communities in American media; we are doing this by
-          aggregating diaspora voices, and telling stories that inform, inspire,
-          engage and entertain.
+          catering to the Afraspora. 
+          Our Content Solutions offer a comprehensive approach to brand storytelling, combining deep category and creative expertise to craft custom, engaging, and platform-optimized content strategies.
+
         </p>
       </div>
       {/* background art */}
