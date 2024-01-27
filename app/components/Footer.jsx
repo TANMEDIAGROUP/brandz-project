@@ -22,6 +22,15 @@ export function Footer({menu, shop}) {
  */
 function FooterMenu({menu, primaryDomainUrl}) {
   const {publicStoreDomain} = useRootLoaderData();
+ const footerLinks=[
+  "Our Story",
+"Our Services",
+"Our Clients",
+"Our Results",
+"Our Info",
+ ]
+
+
 
   return (
     <nav className="min-h-[50vh] flex flex-col py-4 px-4" role="navigation">
