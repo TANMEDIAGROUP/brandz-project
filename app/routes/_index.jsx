@@ -3,6 +3,7 @@ import {HiArrowRight, HiArrowLeft} from 'react-icons/hi';
 import hero1 from '../assets/AdedayoHS4.jpg';
 import hero2 from '../assets/BOMESI1.jpg';
 import hero3 from '../assets/BOMESI-058.jpg';
+import hero4 from '../assets/BOMESI_3.jpg';
 import {FaArrowRightLong} from 'react-icons/fa6';
 import {Suspense, useEffect, useRef, useState} from 'react';
 //place holder
@@ -34,6 +35,7 @@ export default function Homepage() {
   return (
     <div className="">
       <LandingMain />
+      <OurStory />
       <RecommendedProducts products={data.products} />
       <ClientSection />
     </div>
@@ -79,21 +81,26 @@ function LandingMain() {
       </div>
       <div className=" md:w-[45%] px-5 md:min-h-screen flex flex-col pt-10 justify-center">
         <div className="-mt-2 relative">
-          <h1 className="text-[3em] font-[PoppinsBold] text-black leading-[1em]">
-            <span className=" hidden  text-[2em] absolute z-[-29] -top-2 text-[#f9b6b3]">
-              TANTV
-            </span>{' '}
-            The Digital
-            <br /> Home of the{' '}
+          <h1 className="text-[3.7em] font-[PoppinsBold] text-black leading-[1em] mb-2">
+            {/* <span className=" hidden  text-[2em] absolute z-[-29] -top-2 text-[#f9b6b3]">
+              the digital home of the
+            </span>{' '} */}
+            TANTV The
+            <br />
+            <span className="text-[.8em] font-[PoppinsBold]">
+              {' '}
+              Digital Home of the{' '}
+            </span>
             <span className="text-brandRed font-[PoppinsBold]">
               African
             </span>{' '}
             Diaspora.
           </h1>
         </div>
-        <p>
-        Unconventional media company, catering to the 47million diverse African and Black Multicultural Diaspora - we help brands who dare to connect with America’ fastest growing audience.
-
+        <p className='text-md'>
+          Unconventional media company, catering to the 47million diverse
+          African and Black Multicultural Diaspora. <br></br>we help brands who
+          dare to connect with America’ fastest growing audience.
         </p>
         <div className="flex">
           <button className="text-sm md:text-xl bg-black  rounded-full py-3 text-white w-fit my-4 mr-1 hover:scale-105 transition-all flex items-center justify-center pr-12 pl-4 relative border-2 border-black hover:bg-white hover:text-black font-semibold">
@@ -103,6 +110,59 @@ function LandingMain() {
           <button className="ml-2 text-sm md:text-xl bg-brandRed px-10 rounded-full  py-3 text-white w-fit my-4 hover:scale-105 transition-all flex items-center justify-center relative border-2 border-brandRed hover:bg-white hover:text-brandRed font-semibold">
             Join Us
           </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OurStory() {
+  const brands = [
+    {name: 'TANTV STUDIOS', link: 'https://www.tantvstudios.com/'},
+    {name: 'TASTEMAKERS', link: ''},
+    {name: 'BRANDZ', link: ''},
+    {name: 'SYNDEX', link: ''},
+    {name: 'GDYL', link: ''},
+  ];
+
+  return (
+    <div className="grid justify-center mx-8 mt-12">
+      <div className="flex items-center">
+        <img src={hero4} alt="" className="w-[45vw] h-[20em]  object-cover" />
+        <div className="mx-4">
+          <h1 className=" font-[PoppinsBold] text-3xl mb-2">Our Story</h1>
+          <p className="text-sm">
+            Today, the African diaspora have permanent homes outside of the
+            continent but maintain their unique culture and identity by building
+            communities. Black storytelling is not monolithic– what’s happening
+            in American media is that stories of Black people are not
+            representative of the whole story and Black people are lumped under
+            one identity. Black representation on American mainstream has surely
+            changed over time however there is more room for progress.
+          </p>
+          <h1 className="text-xl font-[PoppinsBold] text-brandRed">
+            Our brands
+          </h1>
+          <p className="text-sm">
+            allows lovers of Africa, and its descendants interact, engage and be
+            informed about the tasteful richness of the African & multicultural
+            black diaspora community through stories that reflect their daily
+            lives
+          </p>
+          <div className="flex w-full justify-left mr-4 mt-2">
+            {brands.map((item) => {
+              return (
+                <a
+                  href={item.link}
+                  className="text-white bg-brandRed py-2 px-4  rounded-sm text-sm mr-2 hover:scale-105"
+                  key={item.name}
+                  target="_blank"
+                >
+                  {item.name}
+                </a>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
@@ -142,7 +202,7 @@ function RecommendedProducts({products}) {
   };
   const moveLeft = () => {
     carouselDiv.current.scrollLeft -=
-      carouselDiv.current.scrollWidth / products.nodes.length 
+      carouselDiv.current.scrollWidth / products.nodes.length;
   };
   // const slider = setInterval(() => {
   //   console.log('slider_____', runtrack);
@@ -174,23 +234,18 @@ function RecommendedProducts({products}) {
       </h2>
 
       <div className="text-center ">
-        <p>
-        Strategic Foundations:
-
-        </p>
-        <h2 className="font-bold text-xl text-brandRed">
-          
-        Content Solutions
-        </h2>
+        <p>Strategic Foundations:</p>
+        <h2 className="font-bold text-xl text-brandRed">Content Solutions</h2>
 
         <h3 className="font-extrabold text-2xl">
           Hyper-Focused Development And Growth
         </h3>
         <p className="text-sm my-2 mx-8">
           TANTV is the leading editorial and subscription streaming service
-          catering to the Afraspora. 
-          Our Content Solutions offer a comprehensive approach to brand storytelling, combining deep category and creative expertise to craft custom, engaging, and platform-optimized content strategies.
-
+          catering to the Afraspora. Our Content Solutions offer a comprehensive
+          approach to brand storytelling, combining deep category and creative
+          expertise to craft custom, engaging, and platform-optimized content
+          strategies.
         </p>
       </div>
       {/* background art */}
