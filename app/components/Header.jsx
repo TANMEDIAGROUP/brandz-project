@@ -48,9 +48,10 @@ export function HeaderMenu({menu, cart}) {
   const [sideinner, setsideinner] = useState(false);
   const {publicStoreDomain} = useRootLoaderData();
   const navLinks = [
-    {'Our Story': '#OurServices'},
-    {'Our Services': ['Service 1', 'Service 2', 'Service 3']},
-    {'Work With Us!': ''},
+    {'Our Story': '#OurStory'},
+    {'Our Services': '#OurServices'},
+    // {'Our Services': ['Service 1', 'Service 2', 'Service 3']},
+    // {'Work With Us!': ''},
     {'Our Clients': '#OurClients'},
     {'Contact Us': ''},
   ];
