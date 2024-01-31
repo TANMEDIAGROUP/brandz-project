@@ -1,6 +1,7 @@
 import {NavLink} from '@remix-run/react';
 import {useRootLoaderData} from '~/root';
 import footerLogo from '../assets/logo-brandz-large-white.png';
+
 //logos here
 import {FaFacebook} from 'react-icons/fa';
 import {FaLinkedinIn} from 'react-icons/fa';
