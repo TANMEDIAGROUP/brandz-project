@@ -127,8 +127,8 @@ function OurStory() {
   ];
 
   return (
-    <div className="grid justify-center mx-8 mt-12">
-      <div className="flex-wrap md:flex-nowrap flex items-center">
+    <div className="grid justify-center md:mx-8 mt-12 overflow-hidden">
+      <div className="flex-wrap md:flex-nowrap flex items-center  mx-4 ">
         <img
           src={hero4}
           alt=""
@@ -154,12 +154,12 @@ function OurStory() {
             black diaspora community through stories that reflect their daily
             lives
           </p>
-          <div className="flex w-full justify-left mr-4 mt-2">
+          <div className="flex w-full justify-center md:justify-left mr-4 mt-2 flex-wrap">
             {brands.map((item) => {
               return (
                 <a
                   href={item.link}
-                  className="text-white bg-brandRed py-2 px-4  rounded-sm text-md mr-2 hover:scale-105"
+                  className="text-white bg-brandRed py-2 px-4  rounded-sm text-sm md:text-md mr-4 md:mr-2 hover:scale-105 h-fit"
                   key={item.name}
                   target="_blank"
                 >
@@ -260,7 +260,7 @@ function RecommendedProducts({products}) {
           <Await resolve={products}>
             <div
               ref={carouselDiv}
-              className="flex  w-[100%] overflow-hidden items-center min-h-screen flex-nowrap transition-all relative"
+              className="flex  w-[100%] overflow-hidden items-center md:min-h-screen flex-nowrap transition-all relative"
             >
               {data.map(({description, title, id, images}) => {
                 const {url} = images.nodes[0];

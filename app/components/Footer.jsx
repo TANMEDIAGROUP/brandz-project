@@ -1,6 +1,7 @@
 import {NavLink} from '@remix-run/react';
 import {useRootLoaderData} from '~/root';
 import footerLogo from '../assets/logo-brandz-large-white.png';
+
 //logos here
 import {FaFacebook} from 'react-icons/fa';
 import {FaLinkedinIn} from 'react-icons/fa';
@@ -96,7 +97,7 @@ function FooterMenu() {
             Send us a message
           </a>
         </div>
-        <div className="text-white border-l-[2px] border-brandRed px-4">
+        <div className="text-white border-l-[2px] border-brandRed px-4 mt-2">
           <h1 className="text-xl font-black">Contact Us</h1>
           <p className="text-lg font-bold text-brandRed">address</p>
           <a
