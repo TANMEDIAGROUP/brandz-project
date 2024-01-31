@@ -18,10 +18,11 @@
 }
 
 * {
-  transition: 0.5s linear;
+  transition: 0.3s linear;
   scroll-behavior: smooth;
   font-family: 'PoppinsL', sans-serif;
 }
+
 
 p {
   color: #3e3c3c;
