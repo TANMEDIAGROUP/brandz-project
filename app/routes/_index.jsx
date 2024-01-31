@@ -97,21 +97,22 @@ function LandingMain() {
             Diaspora.
           </h1>
         </div>
-        <p className='text-md'>
+        <p className="text-lg">
           Unconventional media company, catering to the 47million diverse
           African and Black Multicultural Diaspora. <br></br>we help brands who
           dare to connect with America’ fastest growing audience.
         </p>
         <div className="flex">
-          <button className="text-sm md:text-xl bg-black  rounded-full py-3 text-white w-fit my-4 mr-1 hover:scale-105 transition-all flex items-center justify-center pr-12 pl-4 relative border-2 border-black hover:bg-white hover:text-black font-semibold">
+          <button className="text-md md:text-xl bg-black  rounded-full py-3 text-white w-fit my-4 mr-1 hover:scale-105 transition-all flex items-center justify-center pr-12 pl-4 relative border-2 border-black hover:bg-white hover:text-black font-semibold">
             Start Exploring
             <FaArrowRightLong className="bg-white ml-2 rounded-full text-black px-2 py-2 text-4xl absolute right-2 border-2 border-black" />
           </button>
-          <button className="ml-2 text-sm md:text-xl bg-brandRed px-10 rounded-full  py-3 text-white w-fit my-4 hover:scale-105 transition-all flex items-center justify-center relative border-2 border-brandRed hover:bg-white hover:text-brandRed font-semibold">
+          <button className="ml-2 text-md md:text-xl bg-brandRed px-10 rounded-full  py-3 text-white w-fit my-4 hover:scale-105 transition-all flex items-center justify-center relative border-2 border-brandRed hover:bg-white hover:text-brandRed font-semibold">
             Join Us
           </button>
         </div>
       </div>
+      <div id="OurStory"></div>
     </div>
   );
 }
@@ -119,19 +120,23 @@ function LandingMain() {
 function OurStory() {
   const brands = [
     {name: 'TANTV STUDIOS', link: 'https://www.tantvstudios.com/'},
-    {name: 'TASTEMAKERS', link: ''},
-    {name: 'BRANDZ', link: ''},
-    {name: 'SYNDEX', link: ''},
-    {name: 'GDYL', link: ''},
+    {name: 'TASTEMAKERS', link: '/'},
+    {name: 'BRANDZ', link: '/'},
+    {name: 'SYNDEX', link: '/'},
+    {name: 'GDYL', link: '/'},
   ];
 
   return (
     <div className="grid justify-center mx-8 mt-12">
-      <div className="flex items-center">
-        <img src={hero4} alt="" className="w-[45vw] h-[20em]  object-cover" />
+      <div className="flex-wrap md:flex-nowrap flex items-center">
+        <img
+          src={hero4}
+          alt=""
+          className="w-[100%] md:w-[45vw] h-[20em]  object-cover"
+        />
         <div className="mx-4">
           <h1 className=" font-[PoppinsBold] text-3xl mb-2">Our Story</h1>
-          <p className="text-sm">
+          <p className="text-md">
             Today, the African diaspora have permanent homes outside of the
             continent but maintain their unique culture and identity by building
             communities. Black storytelling is not monolithic– what’s happening
@@ -143,7 +148,7 @@ function OurStory() {
           <h1 className="text-xl font-[PoppinsBold] text-brandRed">
             Our brands
           </h1>
-          <p className="text-sm">
+          <p className="text-md">
             allows lovers of Africa, and its descendants interact, engage and be
             informed about the tasteful richness of the African & multicultural
             black diaspora community through stories that reflect their daily
@@ -154,7 +159,7 @@ function OurStory() {
               return (
                 <a
                   href={item.link}
-                  className="text-white bg-brandRed py-2 px-4  rounded-sm text-sm mr-2 hover:scale-105"
+                  className="text-white bg-brandRed py-2 px-4  rounded-sm text-md mr-2 hover:scale-105"
                   key={item.name}
                   target="_blank"
                 >
@@ -165,6 +170,7 @@ function OurStory() {
           </div>
         </div>
       </div>
+      <div id="OurServices"></div>
     </div>
   );
 }
@@ -175,22 +181,24 @@ function OurStory() {
  * }}
  */
 
-const canvasArt = () => (
-  <div className="absolute -right-4 top-[0%] -z-10 overflow-hidden h-[100vh] flex flex-col justify-center ">
-    <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
-    <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
-    <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
-    <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
-    <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
-    <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-14"></div>
-    <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
-    <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
-    <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
-    <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
-    <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
-    <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
-  </div>
-);
+function canvasArt() {
+  return (
+    <div className="absolute -right-4 top-[0%] -z-10 overflow-hidden h-[100vh] flex flex-col justify-center ">
+      <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+      <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+      <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+      <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+      <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
+      <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-14"></div>
+      <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+      <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+      <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+      <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+      <div className="bg-[black] w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+      <div className="bg-brandRed w-[150vw] h-2 rotate-[5deg] mb-4"></div>
+    </div>
+  );
+}
 function RecommendedProducts({products}) {
   const [data, setdata] = useState([]);
   const carouselDiv = useRef();
@@ -226,10 +234,7 @@ function RecommendedProducts({products}) {
   }, []);
   return (
     <div className="min-h-screen  my-4">
-      <h2
-        className="text-3xl font-extrabold mt-[2em] text-center font-[PoppinsBold] text-black"
-        id="OurServices"
-      >
+      <h2 className="text-3xl font-extrabold mt-[2em] text-center font-[PoppinsBold] text-black">
         Our Services
       </h2>
 
@@ -240,7 +245,7 @@ function RecommendedProducts({products}) {
         <h3 className="font-extrabold text-2xl">
           Hyper-Focused Development And Growth
         </h3>
-        <p className="text-sm my-2 mx-8">
+        <p className="text-md my-2 mx-8">
           TANTV is the leading editorial and subscription streaming service
           catering to the Afraspora. Our Content Solutions offer a comprehensive
           approach to brand storytelling, combining deep category and creative
@@ -250,7 +255,7 @@ function RecommendedProducts({products}) {
       </div>
       {/* background art */}
       <div className="relative overflow-hidden ">
-        <canvasArt />
+        {canvasArt()}
         <Suspense fallback={<div>Loading...</div>}>
           <Await resolve={products}>
             <div
@@ -276,7 +281,7 @@ function RecommendedProducts({products}) {
                       <p className=" text-xs font-extralight text-ellipsis text-wrap line-clamp-3 h-12">
                         {description}
                       </p>
-                      <button className="bg-black text-brandRed text-sm py-2 px-4 mt-2 rounded-full flex items-center">
+                      <button className="bg-black text-brandRed text-md py-2 px-4 mt-2 rounded-full flex items-center">
                         SUBSCRIBE
                         <HiArrowRight className="text-xl mx-1" />
                       </button>
@@ -339,7 +344,7 @@ const ClientSection = () => {
       >
         Our Clients
       </h2>
-      <p className="mx-5 text-sm text-center">
+      <p className="mx-5 text-md text-center">
         At TANTV, our clients are our top priority. We offer fully customized
         and budget-friendly service packages designed just for you. With a
         customer-centric approach and a focus on development and growth, we are
