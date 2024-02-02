@@ -1,9 +1,8 @@
 import {Suspense} from 'react';
 import {defer, redirect} from '@shopify/remix-oxygen';
 import {Await, Link, useLoaderData} from '@remix-run/react';
-
+import {MdOutlineShoppingCartCheckout} from 'react-icons/md';
 import {
-  Image,
   Money,
   VariantSelector,
   getSelectedProductOptions,
@@ -15,13 +14,14 @@ import {getVariantUrl} from '~/utils';
  * @type {MetaFunction<typeof loader>}
  */
 export const meta = ({data}) => {
-  return [{title: `Hydrogen | ${data?.product.title ?? ''}`}];
+  return [{title: `TanTv | ${data?.product.title ?? ''}`}];
 };
 
 /**
  * @param {LoaderFunctionArgs}
  */
 export async function loader({params, request, context}) {
+  console.log("###################",params)
   const {handle} = params;
   const {storefront} = context;
 
@@ -105,15 +105,21 @@ function redirectToFirstVariant({product, request}) {
 export default function Product() {
   /** @type {LoaderReturnData} */
   const {product, variants} = useLoaderData();
+  console.log(useLoaderData())
   const {selectedVariant} = product;
   return (
-    <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <ProductMain
-        selectedVariant={selectedVariant}
-        product={product}
-        variants={variants}
-      />
+    <div className="mt-[6em]">
+      <div className="flex">
+        <ProductImage image={selectedVariant?.image} />
+        <ProductMain
+          selectedVariant={selectedVariant}
+          product={product}
+          variants={variants}
+        />
+      </div>
+      <div className="mx-4 mt-12">
+        <h2 className="text-4xl font-[PoppinsBold]">Reccomended Products</h2>
+      </div>
     </div>
   );
 }
@@ -123,16 +129,14 @@ export default function Product() {
  */
 function ProductImage({image}) {
   if (!image) {
-    return <div className="product-image" />;
+    return <div>something went wrong with the image </div>;
   }
   return (
-    <div className="product-image">
-      <Image
+    <div className="">
+      <img
         alt={image.altText || 'Product Image'}
-        aspectRatio="1/1"
-        data={image}
-        key={image.id}
-        sizes="(min-width: 45em) 50vw, 100vw"
+        src={image.url}
+        className=" h-[100vh] w-[50vw] mx-4 object-cover"
       />
     </div>
   );
@@ -148,10 +152,14 @@ function ProductImage({image}) {
 function ProductMain({selectedVariant, product, variants}) {
   const {title, descriptionHtml} = product;
   return (
-    <div className="product-main">
-      <h1>{title}</h1>
-      <ProductPrice selectedVariant={selectedVariant} />
+    <div className="product-main mt-4 w-[50%] mx-8 ">
+      <h1 className="text-4xl font-[PoppinsBold]">{title}</h1>
+      {/* <ProductPrice selectedVariant={selectedVariant} /> */}
+      <p>
+        <strong>Description</strong>
+      </p>
       <br />
+      <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
       <Suspense
         fallback={
           <ProductForm
@@ -174,13 +182,6 @@ function ProductMain({selectedVariant, product, variants}) {
           )}
         </Await>
       </Suspense>
-      <br />
-      <br />
-      <p>
-        <strong>Description</strong>
-      </p>
-      <br />
-      <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
       <br />
     </div>
   );
@@ -221,7 +222,7 @@ function ProductPrice({selectedVariant}) {
  */
 function ProductForm({product, selectedVariant, variants}) {
   return (
-    <div className="product-form">
+    <div className="">
       <VariantSelector
         handle={product.handle}
         options={product.options}
@@ -229,8 +230,7 @@ function ProductForm({product, selectedVariant, variants}) {
       >
         {({option}) => <ProductOptions key={option.name} option={option} />}
       </VariantSelector>
-      <br />
-      <AddToCartButton
+      <button
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {
           window.location.href = window.location.href + '#cart-aside';
@@ -245,9 +245,12 @@ function ProductForm({product, selectedVariant, variants}) {
               ]
             : []
         }
+        className="bg-black py-2 px-4 rounded-full text-brandRed flex justify-center items-center hover:scale-105 hover:bg-white border-[2px] border-brandRed text-lg mt-2"
       >
-        {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
-      </AddToCartButton>
+        <MdOutlineShoppingCartCheckout className="text-2xl" />
+        Add to cart
+        {/* {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'} */}
+      </button>
     </div>
   );
 }
@@ -418,6 +421,22 @@ const VARIANTS_QUERY = `#graphql
     }
   }
 `;
+const MORE_PRODUCT_QUERY = `#graphql
+ query Products {
+  products(first: 20) {
+    nodes {
+      id
+      createdAt
+      title
+      description
+      images(first: 1) {
+        nodes {
+          url
+        }
+      }
+    }
+  }
+}`;
 
 /** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
 /** @template T @typedef {import('@remix-run/react').MetaFunction<T>} MetaFunction */

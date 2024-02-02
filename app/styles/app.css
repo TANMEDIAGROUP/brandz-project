@@ -23,7 +23,6 @@
   font-family: 'PoppinsL', sans-serif;
 }
 
-
 p {
   color: #3e3c3c;
 }
@@ -420,10 +419,15 @@ aside li {
   width: 100%;
 }
 
-.product-main {
-  align-self: start;
-  position: sticky;
-  top: 6rem;
+.product-main a {
+  color: blue;
+}
+.product-main ul {
+  margin-left: 20px;
+}
+.product-main li {
+  list-style-type: circle;
+  margin-left: 5px;
 }
 
 .product-price-on-sale {

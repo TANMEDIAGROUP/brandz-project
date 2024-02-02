@@ -1,4 +1,4 @@
-import {Await, useLoaderData} from '@remix-run/react';
+import {Await, useLoaderData, Link} from '@remix-run/react';
 import {HiArrowRight, HiArrowLeft} from 'react-icons/hi';
 import hero1 from '../assets/AdedayoHS4.jpg';
 import hero2 from '../assets/BOMESI1.jpg';
@@ -82,10 +82,7 @@ function LandingMain() {
       <div className=" md:w-[45%] px-5 md:min-h-screen flex flex-col pt-10 justify-center">
         <div className="-mt-2 relative">
           <h1 className="text-[3.7em] font-[PoppinsBold] text-black leading-[1em] mb-2">
-            {/* <span className=" hidden  text-[2em] absolute z-[-29] -top-2 text-[#f9b6b3]">
-              the digital home of the
-            </span>{' '} */}
-            TANTV The
+            TANTV
             <br />
             <span className="text-[.8em] font-[PoppinsBold]">
               {' '}
@@ -181,7 +178,7 @@ function OurStory() {
  * }}
  */
 
-function canvasArt() {
+export function canvasArt() {
   return (
     <div className="absolute -right-4 top-[0%] -z-10 overflow-hidden h-[100vh] flex flex-col justify-center ">
       <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
@@ -199,7 +196,7 @@ function canvasArt() {
     </div>
   );
 }
-function RecommendedProducts({products}) {
+export function RecommendedProducts({products}) {
   const [data, setdata] = useState([]);
   const carouselDiv = useRef();
 
@@ -232,6 +229,7 @@ function RecommendedProducts({products}) {
       carouselDiv.current.scrollLeft = 200;
     }
   }, []);
+
   return (
     <div className="min-h-screen  my-4">
       <h2 className="text-3xl font-extrabold mt-[2em] text-center font-[PoppinsBold] text-black">
@@ -262,33 +260,46 @@ function RecommendedProducts({products}) {
               ref={carouselDiv}
               className="flex  w-[100%] overflow-hidden items-center md:min-h-screen flex-nowrap transition-all relative"
             >
-              {data.map(({description, title, id, images}) => {
-                const {url} = images.nodes[0];
-                return (
-                  <div
-                    key={id}
-                    className="min-w-[16em] backdrop-blur-sm bg-[#ffffffca] mx-3 shadow-[2px_2px_20px_#aaaaaa97]  rounded-md hover:scale-105 transition-all scale-y-95 z-10 "
-                  >
-                    <img
-                      src={url}
-                      alt="service image"
-                      className="h-[15em] w-full object-cover"
-                    />
-                    <div className="px-4 relative py-3 ">
-                      <h1 className="font-extrabold text-xl text-black line-clamp-1">
-                        {title}
-                      </h1>
-                      <p className=" text-xs font-extralight text-ellipsis text-wrap line-clamp-3 h-12">
-                        {description}
-                      </p>
-                      <button className="bg-black text-brandRed text-md py-2 px-4 mt-2 rounded-full flex items-center">
-                        SUBSCRIBE
-                        <HiArrowRight className="text-xl mx-1" />
-                      </button>
+              {data.map(
+                ({description, title, id, images, handle, priceRange}) => {
+                  const {url} = images.nodes[0];
+                  console.log(priceRange.minVariantPrice);
+                  return (
+                    <div
+                      key={id}
+                      className="min-w-[16em] backdrop-blur-sm bg-[#ffffffca] mx-3 shadow-[2px_2px_20px_#aaaaaa97]  rounded-md hover:scale-105 transition-all scale-y-95 z-10 "
+                    >
+                      <img
+                        src={url}
+                        alt="service image"
+                        className="h-[15em] w-full object-cover"
+                      />
+                      <div className="px-4 relative py-3 ">
+                        <h1 className="font-extrabold text-xl text-black line-clamp-1">
+                          {title}
+                        </h1>
+                        <p className=" text-xs font-extralight text-ellipsis text-wrap line-clamp-3 h-12">
+                          {description}
+                        </p>
+                        <Link
+                          to={`/products/${handle
+                            .split(' ')
+                            .join('-')
+                            .toLowerCase()}`}
+                          className="bg-black text-brandRed text-md py-2 px-4 mt-2 rounded-full flex items-center justify-between"
+                        >
+                          SUBSCRIBE{' '}
+                          <span className="flex">
+                            {priceRange.minVariantPrice.amount}
+                            {priceRange.minVariantPrice.currencyCode}
+                            <HiArrowRight className="text-xl mx-1" />
+                          </span>
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                },
+              )}
             </div>
             <div className="absolute w-full min-h-screen bg-black">
               <div className="flex absolute -top-[50%] z-30 w-full justify-between">
@@ -391,7 +402,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
 `;
 
 const PRODUCT_QUERY = `#graphql
- query Products {
+query Products {
   products(first: 20) {
     nodes {
       id
@@ -403,6 +414,14 @@ const PRODUCT_QUERY = `#graphql
           url
         }
       }
+      tags
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+      handle
     }
   }
 }`;

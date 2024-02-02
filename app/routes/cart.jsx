@@ -9,7 +9,7 @@ import {useRootLoaderData} from '~/root';
  * @type {MetaFunction}
  */
 export const meta = () => {
-  return [{title: `Hydrogen | Cart`}];
+  return [{title: `TanTv | Cart`}];
 };
 
 /**
@@ -93,7 +93,7 @@ export default function Cart() {
 
   return (
     <div className="cart">
-      <h1>Cart</h1>
+      <h1 className="text-[20em]">Cart </h1>
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await
           resolve={cartPromise}

@@ -13,7 +13,6 @@ import {HiMenuAlt3} from 'react-icons/hi';
  */
 
 export async function loaderSearch({context}) {
-  console.log('ERTYUB', context);
   const {storefront} = context;
   const data = await storefront.query(PREDICTIVESEARCHFORM);
   return data;
@@ -21,7 +20,6 @@ export async function loaderSearch({context}) {
 
 export function Header({header, isLoggedIn, cart}) {
   const {shop, menu} = header;
-  console.log('&&&&&&&&&', header);
   return (
     <header className=" flex h-[5em] fixed w-[100%] backdrop-blur-md bg-[#ffffff9d] shadow-sm z-[100] items-center px-5 justify-between ">
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>

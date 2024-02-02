@@ -31,6 +31,7 @@ function FooterMenu() {
     'Our Clients',
     'Our Results',
     'Our Info',
+    "account "
   ];
   const socials = [
     {
