@@ -196,10 +196,11 @@ export function canvasArt() {
     </div>
   );
 }
-export function RecommendedProducts({products}) {
+
+export const ProductCarousel = ({products}) => {
   const [data, setdata] = useState([]);
   const carouselDiv = useRef();
-
+  console.log(data, '!@#$%67');
   const moveRight = () => {
     console.log('right move', carouselDiv);
     carouselDiv.current.scrollLeft +=
@@ -209,6 +210,85 @@ export function RecommendedProducts({products}) {
     carouselDiv.current.scrollLeft -=
       carouselDiv.current.scrollWidth / products.nodes.length;
   };
+  useEffect(() => {
+    try {
+      setdata((prev) => [...prev, ...products.nodes]);
+      if (carouselDiv.current) {
+        carouselDiv.current.scrollLeft = 200;
+      }
+    } catch (err) {
+      setdata([]);
+      console.log(err, '%%%%%%%%%%%');
+    }
+  }, []);
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Await resolve={data}>
+        <div
+          ref={carouselDiv}
+          className="flex  w-[100%] overflow-hidden items-center flex-nowrap transition-all relative"
+        >
+          {data.map(({description, title, id, images, handle, priceRange}) => {
+            const {url} = images.nodes[0];
+            console.log(priceRange.minVariantPrice);
+            return (
+              <div
+                key={id}
+                className="min-w-[16em] backdrop-blur-sm bg-[#ffffffca] mx-3 shadow-[2px_2px_20px_#aaaaaa97]  rounded-md hover:scale-105 transition-all scale-y-95 z-10 "
+              >
+                <img
+                  src={url}
+                  alt="service image"
+                  className="h-[15em] w-full object-cover"
+                />
+                <div className="px-4 relative py-3 ">
+                  <h1 className="font-extrabold text-xl text-black line-clamp-1">
+                    {title}
+                  </h1>
+                  <p className=" text-xs font-extralight text-ellipsis text-wrap line-clamp-3 h-12">
+                    {description}
+                  </p>
+                  <Link
+                    to={`/products/${handle
+                      .split(' ')
+                      .join('-')
+                      .toLowerCase()}`}
+                    className="bg-black text-brandRed text-md py-2 px-4 mt-2 rounded-full flex items-center justify-between"
+                  >
+                    SUBSCRIBE{' '}
+                    <span className="flex">
+                      {priceRange.minVariantPrice.amount}
+                      {priceRange.minVariantPrice.currencyCode}
+                      <HiArrowRight className="text-xl mx-1" />
+                    </span>
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="absolute w-full top-[40%] left-0">
+          <div className="flex absolute  z-30 w-full justify-between ">
+            <button
+              onClick={moveLeft}
+              className=" bg-brandRed rounded-full py-4 px-1 text-black  hover:h-[6em] hover:w-[3em] rounded-l-none transition-all h-14"
+            >
+              <HiArrowLeft className="text-2xl " />
+            </button>
+            <button
+              className=" bg-brandRed rounded-full py-4 px-1 text-black hover:h-[6em] hover:w-[3em] rounded-r-none transition-all h-14"
+              onClick={moveRight}
+            >
+              <HiArrowRight className="text-2xl " />
+            </button>
+          </div>
+        </div>
+      </Await>
+    </Suspense>
+  );
+};
+
+export function RecommendedProducts({products}) {
   // const slider = setInterval(() => {
   //   console.log('slider_____', runtrack);
   //   if (runtrack == true) {
@@ -223,12 +303,6 @@ export function RecommendedProducts({products}) {
   //     }
   //   }
   // }, 5000);
-  useEffect(() => {
-    setdata((prev) => [...prev, ...products.nodes]);
-    if (carouselDiv.current) {
-      carouselDiv.current.scrollLeft = 200;
-    }
-  }, []);
 
   return (
     <div className="min-h-screen  my-4">
@@ -254,71 +328,7 @@ export function RecommendedProducts({products}) {
       {/* background art */}
       <div className="relative overflow-hidden ">
         {canvasArt()}
-        <Suspense fallback={<div>Loading...</div>}>
-          <Await resolve={products}>
-            <div
-              ref={carouselDiv}
-              className="flex  w-[100%] overflow-hidden items-center md:min-h-screen flex-nowrap transition-all relative"
-            >
-              {data.map(
-                ({description, title, id, images, handle, priceRange}) => {
-                  const {url} = images.nodes[0];
-                  console.log(priceRange.minVariantPrice);
-                  return (
-                    <div
-                      key={id}
-                      className="min-w-[16em] backdrop-blur-sm bg-[#ffffffca] mx-3 shadow-[2px_2px_20px_#aaaaaa97]  rounded-md hover:scale-105 transition-all scale-y-95 z-10 "
-                    >
-                      <img
-                        src={url}
-                        alt="service image"
-                        className="h-[15em] w-full object-cover"
-                      />
-                      <div className="px-4 relative py-3 ">
-                        <h1 className="font-extrabold text-xl text-black line-clamp-1">
-                          {title}
-                        </h1>
-                        <p className=" text-xs font-extralight text-ellipsis text-wrap line-clamp-3 h-12">
-                          {description}
-                        </p>
-                        <Link
-                          to={`/products/${handle
-                            .split(' ')
-                            .join('-')
-                            .toLowerCase()}`}
-                          className="bg-black text-brandRed text-md py-2 px-4 mt-2 rounded-full flex items-center justify-between"
-                        >
-                          SUBSCRIBE{' '}
-                          <span className="flex">
-                            {priceRange.minVariantPrice.amount}
-                            {priceRange.minVariantPrice.currencyCode}
-                            <HiArrowRight className="text-xl mx-1" />
-                          </span>
-                        </Link>
-                      </div>
-                    </div>
-                  );
-                },
-              )}
-            </div>
-            <div className="absolute w-full min-h-screen bg-black">
-              <div className="flex absolute -top-[50%] z-30 w-full justify-between">
-                <button
-                  onClick={moveLeft}
-                  className=" bg-brandRed rounded-full py-4 px-1 text-black  hover:h-[6em] hover:w-[3em] rounded-l-none transition-all h-12"
-                >
-                  <HiArrowLeft className="text-xl mx-1" />
-                </button>
-                <button
-                  className=" bg-brandRed rounded-full py-4 px-1 text-black hover:h-[6em] hover:w-[3em] rounded-r-none transition-all h-12"
-                  onClick={moveRight}
-                >
-                  <HiArrowRight className="text-xl mx-1" />
-                </button>
-              </div>
-            </div>
-          </Await>
-        </Suspense>
+        <ProductCarousel products={products} />
       </div>
     </div>
   );

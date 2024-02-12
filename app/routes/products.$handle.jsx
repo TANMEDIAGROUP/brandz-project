@@ -9,6 +9,10 @@ import {
   CartForm,
 } from '@shopify/hydrogen';
 import {getVariantUrl} from '~/utils';
+import { ProductCarousel  } from './_index';
+
+
+
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -21,7 +25,6 @@ export const meta = ({data}) => {
  * @param {LoaderFunctionArgs}
  */
 export async function loader({params, request, context}) {
-  console.log("###################",params)
   const {handle} = params;
   const {storefront} = context;
 
@@ -45,6 +48,7 @@ export async function loader({params, request, context}) {
   const {product} = await storefront.query(PRODUCT_QUERY, {
     variables: {handle, selectedOptions},
   });
+  const recommended =await storefront.query(MORE_PRODUCT_QUERY)
 
   if (!product?.id) {
     throw new Response(null, {status: 404});
@@ -63,7 +67,7 @@ export async function loader({params, request, context}) {
     // if no selected variant was returned from the selected options,
     // we redirect to the first variant's url with it's selected options applied
     if (!product.selectedVariant) {
-      throw redirectToFirstVariant({product, request});
+      throw redirectToFirstVariant({product, request,recommended});
     }
   }
 
@@ -76,7 +80,7 @@ export async function loader({params, request, context}) {
     variables: {handle},
   });
 
-  return defer({product, variants});
+  return defer({product, variants,recommended});
 }
 
 /**
@@ -104,12 +108,12 @@ function redirectToFirstVariant({product, request}) {
 
 export default function Product() {
   /** @type {LoaderReturnData} */
-  const {product, variants} = useLoaderData();
-  console.log(useLoaderData())
+  const {product, variants,recommended} = useLoaderData();
   const {selectedVariant} = product;
+  console.log("!!!!!!!!!!!!!!",recommended);
   return (
     <div className="mt-[6em]">
-      <div className="flex">
+      <div className="flex flex-wrap lg:flex-nowrap">
         <ProductImage image={selectedVariant?.image} />
         <ProductMain
           selectedVariant={selectedVariant}
@@ -117,8 +121,9 @@ export default function Product() {
           variants={variants}
         />
       </div>
-      <div className="mx-4 mt-12">
+      <div className="mx-4 mt-12 relative">
         <h2 className="text-4xl font-[PoppinsBold]">Reccomended Products</h2>
+        <ProductCarousel  products={recommended.products}/>
       </div>
     </div>
   );
@@ -136,7 +141,7 @@ function ProductImage({image}) {
       <img
         alt={image.altText || 'Product Image'}
         src={image.url}
-        className=" h-[100vh] w-[50vw] mx-4 object-cover"
+        className=" mx-auto w-[95%] lg:h-[60vh] lg:w-[50vw] lg:mx-4 object-cover"
       />
     </div>
   );
@@ -152,14 +157,15 @@ function ProductImage({image}) {
 function ProductMain({selectedVariant, product, variants}) {
   const {title, descriptionHtml} = product;
   return (
-    <div className="product-main mt-4 w-[50%] mx-8 ">
+    <div className="product-main mt-4 lg:w-[50%] mx-8 flex flex-col justify-center ">
       <h1 className="text-4xl font-[PoppinsBold]">{title}</h1>
-      {/* <ProductPrice selectedVariant={selectedVariant} /> */}
+
       <p>
         <strong>Description</strong>
       </p>
       <br />
       <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+      <ProductPrice selectedVariant={selectedVariant} />
       <Suspense
         fallback={
           <ProductForm
@@ -207,7 +213,7 @@ function ProductPrice({selectedVariant}) {
           </div>
         </>
       ) : (
-        selectedVariant?.price && <Money data={selectedVariant?.price} />
+        selectedVariant?.price && <Money data={selectedVariant?.price} className='text-2xl font-black' />
       )}
     </div>
   );
@@ -245,7 +251,7 @@ function ProductForm({product, selectedVariant, variants}) {
               ]
             : []
         }
-        className="bg-black py-2 px-4 rounded-full text-brandRed flex justify-center items-center hover:scale-105 hover:bg-white border-[2px] border-brandRed text-lg mt-2"
+        className="bg-black py-2 px-6 rounded-full text-white flex justify-center items-center hover:scale-105  text-lg mt-2"
       >
         <MdOutlineShoppingCartCheckout className="text-2xl" />
         Add to cart
@@ -364,6 +370,14 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     descriptionHtml
     description
+    priceRange {
+      maxVariantPrice {
+        amount
+      }
+      minVariantPrice {
+        amount
+      }
+    }
     options {
       name
       values
@@ -396,6 +410,9 @@ const PRODUCT_QUERY = `#graphql
     }
   }
   ${PRODUCT_FRAGMENT}
+
+
+  
 `;
 
 const PRODUCT_VARIANTS_FRAGMENT = `#graphql
@@ -422,6 +439,7 @@ const VARIANTS_QUERY = `#graphql
   }
 `;
 const MORE_PRODUCT_QUERY = `#graphql
+
  query Products {
   products(first: 20) {
     nodes {
@@ -434,6 +452,14 @@ const MORE_PRODUCT_QUERY = `#graphql
           url
         }
       }
+      tags
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+      handle
     }
   }
 }`;
