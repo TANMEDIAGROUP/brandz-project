@@ -9,10 +9,7 @@ import {
   CartForm,
 } from '@shopify/hydrogen';
 import {getVariantUrl} from '~/utils';
-import { ProductCarousel  } from './_index';
-
-
-
+import {ProductCarousel} from './_index';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -48,7 +45,7 @@ export async function loader({params, request, context}) {
   const {product} = await storefront.query(PRODUCT_QUERY, {
     variables: {handle, selectedOptions},
   });
-  const recommended =await storefront.query(MORE_PRODUCT_QUERY)
+  const recommended = await storefront.query(MORE_PRODUCT_QUERY);
 
   if (!product?.id) {
     throw new Response(null, {status: 404});
@@ -67,7 +64,7 @@ export async function loader({params, request, context}) {
     // if no selected variant was returned from the selected options,
     // we redirect to the first variant's url with it's selected options applied
     if (!product.selectedVariant) {
-      throw redirectToFirstVariant({product, request,recommended});
+      throw redirectToFirstVariant({product, request, recommended});
     }
   }
 
@@ -80,7 +77,7 @@ export async function loader({params, request, context}) {
     variables: {handle},
   });
 
-  return defer({product, variants,recommended});
+  return defer({product, variants, recommended});
 }
 
 /**
@@ -108,9 +105,9 @@ function redirectToFirstVariant({product, request}) {
 
 export default function Product() {
   /** @type {LoaderReturnData} */
-  const {product, variants,recommended} = useLoaderData();
+  const {product, variants, recommended} = useLoaderData();
   const {selectedVariant} = product;
-  console.log("!!!!!!!!!!!!!!",recommended);
+  console.log('!!!!!!!!!!!!!!', recommended);
   return (
     <div className="mt-[6em]">
       <div className="flex flex-wrap lg:flex-nowrap">
@@ -123,7 +120,7 @@ export default function Product() {
       </div>
       <div className="mx-4 mt-12 relative">
         <h2 className="text-4xl font-[PoppinsBold]">Reccomended Products</h2>
-        <ProductCarousel  products={recommended.products}/>
+        <ProductCarousel products={recommended.products} />
       </div>
     </div>
   );
@@ -213,7 +210,12 @@ function ProductPrice({selectedVariant}) {
           </div>
         </>
       ) : (
-        selectedVariant?.price && <Money data={selectedVariant?.price} className='text-2xl font-black' />
+        selectedVariant?.price && (
+          <Money
+            data={selectedVariant?.price}
+            className="text-2xl font-black"
+          />
+        )
       )}
     </div>
   );
@@ -227,6 +229,7 @@ function ProductPrice({selectedVariant}) {
  * }}
  */
 function ProductForm({product, selectedVariant, variants}) {
+  const isOutOfStock = !selectedVariant?.availableForSale;
   return (
     <div className="">
       <VariantSelector
@@ -236,27 +239,34 @@ function ProductForm({product, selectedVariant, variants}) {
       >
         {({option}) => <ProductOptions key={option.name} option={option} />}
       </VariantSelector>
-      <button
-        disabled={!selectedVariant || !selectedVariant.availableForSale}
-        onClick={() => {
-          window.location.href = window.location.href + '#cart-aside';
-        }}
-        lines={
-          selectedVariant
-            ? [
-                {
-                  merchandiseId: selectedVariant.id,
-                  quantity: 1,
-                },
-              ]
-            : []
-        }
-        className="bg-black py-2 px-6 rounded-full text-white flex justify-center items-center hover:scale-105  text-lg mt-2"
-      >
-        <MdOutlineShoppingCartCheckout className="text-2xl" />
-        Add to cart
-        {/* {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'} */}
-      </button>
+      <div className="flex ">
+        {isOutOfStock ? (
+          <button className='bg-gray-400 px-5 rounded-full text-white' disabled>
+            Sold out
+          </button>
+        ) : (
+          <AddToCartButton
+            lines={[
+              {
+                merchandiseId: selectedVariant.id,
+                quantity: 1,
+              },
+            ]}
+            variant="primary"
+            data-test="add-to-cart"
+          >
+            <p
+              as="span"
+              className="flex items-center justify-center gap-2 text-white"
+            >
+              Add to Cart
+            </p>
+          </AddToCartButton>
+        )}
+        <button className="py-4 px-8 bg-brandRed rounded-full ml-2 text-white  hover:scale-105">
+          buy now
+        </button>
+      </div>
     </div>
   );
 }
@@ -314,9 +324,11 @@ function AddToCartButton({analytics, children, disabled, lines, onClick}) {
           />
           <button
             type="submit"
-            onClick={onClick}
             disabled={disabled ?? fetcher.state !== 'idle'}
+            onClick={onClick}
+            className="bg-black py-4 px-6 rounded-full text-white flex justify-center items-center hover:scale-105  text-lg mt-2 disabled:bg-slate-300"
           >
+            <MdOutlineShoppingCartCheckout className="text-2xl" />
             {children}
           </button>
         </>

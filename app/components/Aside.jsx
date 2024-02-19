@@ -21,10 +21,11 @@ export function Aside({children, heading, id = 'aside'}) {
         onClick={() => {
           history.go(-1);
           window.location.hash = '';
+          console.log('closing aside');
         }}
       />
-      <aside>
-        <header>
+      <aside className="pt-[5em] flex flex-col">
+        <header className="w-[25em]">
           <h3>{heading}</h3>
           <CloseAside />
         </header>
@@ -37,7 +38,7 @@ export function Aside({children, heading, id = 'aside'}) {
 function CloseAside() {
   return (
     /* eslint-disable-next-line jsx-a11y/anchor-is-valid */
-    <a className="close" href="#" onChange={() => history.go(-1)}>
+    <a className="close" href="#" onClick={() => window.location.hash=''}>
       &times;
     </a>
   );

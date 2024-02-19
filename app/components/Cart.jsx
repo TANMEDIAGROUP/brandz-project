@@ -1,7 +1,7 @@
 import {CartForm, Image, Money} from '@shopify/hydrogen';
 import {Link} from '@remix-run/react';
 import {useVariantUrl} from '~/utils';
-
+import {FaTrashAlt} from 'react-icons/fa';
 /**
  * @param {CartMainProps}
  */
@@ -13,7 +13,7 @@ export function CartMain({layout, cart}) {
   const className = `cart-main ${withDiscount ? 'with-discount' : ''}`;
 
   return (
-    <div className={className}>
+    <div className="  ">
       <CartEmpty hidden={linesCount} layout={layout} />
       <CartDetails cart={cart} layout={layout} />
     </div>
@@ -47,7 +47,7 @@ function CartDetails({layout, cart}) {
  */
 function CartLines({lines, layout}) {
   if (!lines) return null;
-
+  console.log(lines);
   return (
     <div aria-labelledby="cart-lines">
       <ul>
@@ -67,11 +67,10 @@ function CartLines({lines, layout}) {
  */
 function CartLineItem({layout, line}) {
   const {id, merchandise} = line;
-  const {product, title, image, selectedOptions} = merchandise;
+  const {product, title, image, selectedOptions, description} = merchandise;
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
-
   return (
-    <li key={id} className="cart-line">
+    <li key={id} className="cart-line bg-white rounded-md my-2">
       {image && (
         <Image
           alt={title}
@@ -95,18 +94,21 @@ function CartLineItem({layout, line}) {
           }}
         >
           <p>
-            <strong>{product.title}</strong>
+            <strong className="text-brandRed">{product.title}</strong>
           </p>
         </Link>
         <CartLinePrice line={line} as="span" />
         <ul>
-          {selectedOptions.map((option) => (
-            <li key={option.name}>
-              <small>
-                {option.name}: {option.value}
-              </small>
-            </li>
-          ))}
+          {selectedOptions.map((option) => {
+            console.log(option);
+            return (
+              <li key={option.name}>
+                <small>
+                  {option.name}: {option.value}
+                </small>
+              </li>
+            );
+          })}
         </ul>
         <CartLineQuantity line={line} />
       </div>
@@ -121,12 +123,13 @@ function CartCheckoutActions({checkoutUrl}) {
   if (!checkoutUrl) return null;
 
   return (
-    <div>
-      <a href={checkoutUrl} target="_self">
-        <p>Continue to Checkout &rarr;</p>
-      </a>
-      <br />
-    </div>
+    <a
+      href={checkoutUrl}
+      target="_self"
+      className="bg-brandRed py-4 w-[95%] my-4 mr-8 text-center text-white text-xl"
+    >
+      Checkout &rarr;
+    </a>
   );
 }
 
@@ -139,14 +142,14 @@ function CartCheckoutActions({checkoutUrl}) {
  */
 export function CartSummary({cost, layout, children = null}) {
   const className =
-    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside';
+    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside ml-2 grid';
 
   return (
     <div aria-labelledby="cart-summary" className={className}>
-      <h4>Totals</h4>
+      <h4 className="text-2xl font-[PoppinsBold]">Totals</h4>
       <dl className="cart-subtotal">
-        <dt>Subtotal</dt>
-        <dd>
+        <dt className=" text-xl">Subtotal: </dt>
+        <dd className="font-bold text-xl">
           {cost?.subtotalAmount?.amount ? (
             <Money data={cost?.subtotalAmount} />
           ) : (
@@ -169,7 +172,9 @@ function CartLineRemoveButton({lineIds}) {
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{lineIds}}
     >
-      <button type="submit">Remove</button>
+      <button type="submit">
+        <FaTrashAlt className="text-xl" />
+      </button>
     </CartForm>
   );
 }
@@ -184,30 +189,33 @@ function CartLineQuantity({line}) {
   const nextQuantity = Number((quantity + 1).toFixed(0));
 
   return (
-    <div className="cart-line-quantiy">
-      <small>Quantity: {quantity} &nbsp;&nbsp;</small>
-      <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
-        <button
-          aria-label="Decrease quantity"
-          disabled={quantity <= 1}
-          name="decrease-quantity"
-          value={prevQuantity}
-        >
-          <span>&#8722; </span>
-        </button>
-      </CartLineUpdateButton>
-      &nbsp;
-      <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
-        <button
-          aria-label="Increase quantity"
-          name="increase-quantity"
-          value={nextQuantity}
-        >
-          <span>&#43;</span>
-        </button>
-      </CartLineUpdateButton>
-      &nbsp;
-      <CartLineRemoveButton lineIds={[lineId]} />
+    <div className="flex">
+      <small className="text-md">Quantity: {quantity} &nbsp;&nbsp;</small>
+      <div className="flex justify-between w-[5em]">
+        <div className="flex">
+          <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
+            <button
+              aria-label="Decrease quantity"
+              disabled={quantity <= 1}
+              name="decrease-quantity"
+              value={prevQuantity}
+            >
+              <span>&#8722; </span>
+            </button>
+          </CartLineUpdateButton>
+          &nbsp;
+          <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
+            <button
+              aria-label="Increase quantity"
+              name="increase-quantity"
+              value={nextQuantity}
+            >
+              <span>&#43;</span>
+            </button>
+          </CartLineUpdateButton>
+        </div>
+        <CartLineRemoveButton lineIds={[lineId]} />
+      </div>
     </div>
   );
 }
@@ -283,7 +291,7 @@ function CartDiscounts({discountCodes}) {
       {/* Have existing discount, display it with a remove option */}
       <dl hidden={!codes.length}>
         <div>
-          <dt>Discount(s)</dt>
+          <dt>Discount</dt>
           <UpdateDiscountForm>
             <div className="cart-discount">
               <code>{codes?.join(', ')}</code>
@@ -296,10 +304,21 @@ function CartDiscounts({discountCodes}) {
 
       {/* Show an input to apply a discount */}
       <UpdateDiscountForm discountCodes={codes}>
-        <div>
-          <input type="text" name="discountCode" placeholder="Discount code" />
-          &nbsp;
-          <button type="submit">Apply</button>
+        <div className="flex mb-2">
+          <input
+            type="text"
+            name="discountCode"
+            placeholder="Discount code"
+            autoFocus
+            className="w-[70%] -1"
+          />
+
+          <button
+            type="submit"
+            className="bg-black text-white px-6 hover:scale-105"
+          >
+            Apply
+          </button>
         </div>
       </UpdateDiscountForm>
     </div>

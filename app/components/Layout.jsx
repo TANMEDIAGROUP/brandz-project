@@ -16,8 +16,8 @@ import {
 export function Layout({cart, children = null, footer, header, isLoggedIn}) {
   return (
     <>
-      {/* <CartAside cart={cart} />
-      <SearchAside /> */}
+      <CartAside cart={cart} />
+      {/* <SearchAside /> */}
       {header && <Header header={header} cart={cart} isLoggedIn={isLoggedIn} />}
       <main>{children}</main>
       <Suspense>
@@ -32,19 +32,19 @@ export function Layout({cart, children = null, footer, header, isLoggedIn}) {
 /**
  * @param {{cart: LayoutProps['cart']}}
  */
-// function CartAside({cart}) {
-//   return (
-//     <Aside id="cart-aside" heading="CART">
-//       <Suspense fallback={<p>Loading cart ...</p>}>
-//         <Await resolve={cart}>
-//           {(cart) => {
-//             return <CartMain cart={cart} layout="aside" />;
-//           }}
-//         </Await>
-//       </Suspense>
-//     </Aside>
-//   );
-// }
+function CartAside({cart}) {
+  return (
+    <Aside id="cart-aside" heading="CART">
+      <Suspense fallback={<p>Loading cart ...</p>}>
+        <Await resolve={cart}>
+          {(cart) => {
+            return <CartMain cart={cart} layout="aside" />;
+          }}
+        </Await>
+      </Suspense>
+    </Aside>
+  );
+}
 
 // function SearchAside() {
 //   return (

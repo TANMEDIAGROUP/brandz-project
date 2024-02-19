@@ -180,7 +180,7 @@ function OurStory() {
 
 export function canvasArt() {
   return (
-    <div className="absolute -right-4 top-[0%] -z-10 overflow-hidden h-[100vh] flex flex-col justify-center ">
+    <div className="absolute -right-4 top-[0%] -z-10 overflow-hidden h-[60vh] flex flex-col justify-center ">
       <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
       <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
       <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
@@ -200,9 +200,7 @@ export function canvasArt() {
 export const ProductCarousel = ({products}) => {
   const [data, setdata] = useState([]);
   const carouselDiv = useRef();
-  console.log(data, '!@#$%67');
   const moveRight = () => {
-    console.log('right move', carouselDiv);
     carouselDiv.current.scrollLeft +=
       carouselDiv.current.scrollWidth / products.nodes.length;
   };
@@ -218,7 +216,6 @@ export const ProductCarousel = ({products}) => {
       }
     } catch (err) {
       setdata([]);
-      console.log(err, '%%%%%%%%%%%');
     }
   }, []);
   return (
@@ -226,11 +223,10 @@ export const ProductCarousel = ({products}) => {
       <Await resolve={data}>
         <div
           ref={carouselDiv}
-          className="flex  w-[100%] overflow-hidden items-center flex-nowrap transition-all relative"
+          className="flex  w-[100%] overflow-hidden items-center flex-nowrap transition-all relative min-h-[65vh]"
         >
           {data.map(({description, title, id, images, handle, priceRange}) => {
             const {url} = images.nodes[0];
-            console.log(priceRange.minVariantPrice);
             return (
               <div
                 key={id}
@@ -305,7 +301,7 @@ export function RecommendedProducts({products}) {
   // }, 5000);
 
   return (
-    <div className="min-h-screen  my-4">
+    <div className="  my-12">
       <h2 className="text-3xl font-extrabold mt-[2em] text-center font-[PoppinsBold] text-black">
         Our Services
       </h2>

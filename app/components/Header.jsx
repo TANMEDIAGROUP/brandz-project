@@ -25,9 +25,32 @@ export function Header({header, isLoggedIn, cart}) {
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
         <img src={mainLogo} alt="" className="h-5" />
       </NavLink>
-      <HeaderMenu menu={menu} cart={0} />
-      {/* <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} /> */}
+      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      <HeaderMenu menu={menu} cart={cart} />
     </header>
+  );
+}
+
+function HeaderCtas({isLoggedIn, cart}) {
+  return (
+    <nav className="header-ctas" role="navigation">
+      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
+        <Suspense fallback="Sign in">
+          <Await resolve={isLoggedIn} errorElement="Sign in">
+            {(isLoggedIn) =>
+              isLoggedIn ? (
+                <p>Account</p>
+              ) : (
+                <button className="bg-black py-2 px-6 rounded-full text-white">
+                  Sign in
+                </button>
+              )
+            }
+          </Await>
+        </Suspense>
+      </NavLink>
+      <CartToggle cart={cart} />
+    </nav>
   );
 }
 
@@ -58,7 +81,7 @@ export function HeaderMenu({menu, cart}) {
     <div className="">
       <nav className="header-ctas" role="navigation">
         <SearchToggle />
-        <CartToggle cart={cart} />
+
         <HiMenuAlt3
           onClick={() => {
             setsidemenu(' polygon(100% 0, 0 0, 0 100%, 100% 100%)');
@@ -173,19 +196,25 @@ function SearchToggle() {
  */
 function CartBadge({count}) {
   return (
-    <NavLink
+    <a
       className="relative flex  py-2 px-1 transition-all hover:scale-105"
-      to={'/cart'}
+      href="#cart-aside"
+      onClick={()=>{
+        console.log("S SSSVVVVVVVVVV")
+        if (window.location.hash == '#cart-aside') {
+          window.location.hash =""
+        }
+      }}
     >
       <MdOutlineShoppingCart className="text-3xl transition-all hover:scale-105 hover:text-brandRed" />
       {count && count > 0 ? (
-        <p className="absolute -top-0 -right-1 w-6 h-6 grid justify-center rounded-full bg-black text-white font-bold  z-[4]">
+        <p className=" w-6 h-6 grid justify-center rounded-full bg-brandRed  text-white font-bold  z-[4] pt-[.1em]">
           {count}
         </p>
       ) : (
-        <></>
+        <p className="hidden"></p>
       )}
-    </NavLink>
+    </a>
   );
 }
 

@@ -90,10 +90,9 @@ export async function action({request, context}) {
 export default function Cart() {
   const rootData = useRootLoaderData();
   const cartPromise = rootData.cart;
-
   return (
     <div className="cart">
-      <h1 className="text-[20em]">Cart </h1>
+      <h1 className="text-[20em] ">Cart </h1>
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await
           resolve={cartPromise}
