@@ -1,4 +1,4 @@
-import {Await, useLoaderData} from '@remix-run/react';
+import {Await, useLoaderData, Link} from '@remix-run/react';
 import {HiArrowRight, HiArrowLeft} from 'react-icons/hi';
 import hero1 from '../assets/AdedayoHS4.jpg';
 import hero2 from '../assets/BOMESI1.jpg';
@@ -82,10 +82,7 @@ function LandingMain() {
       <div className=" md:w-[45%] px-5 md:min-h-screen flex flex-col pt-10 justify-center">
         <div className="-mt-2 relative">
           <h1 className="text-[3.7em] font-[PoppinsBold] text-black leading-[1em] mb-2">
-            {/* <span className=" hidden  text-[2em] absolute z-[-29] -top-2 text-[#f9b6b3]">
-              the digital home of the
-            </span>{' '} */}
-            TANTV The
+            TANTV
             <br />
             <span className="text-[.8em] font-[PoppinsBold]">
               {' '}
@@ -159,7 +156,7 @@ function OurStory() {
               return (
                 <a
                   href={item.link}
-                  className="text-white bg-brandRed py-2 px-4  rounded-sm text-sm mr-2 hover:scale-105"
+                  className="text-white bg-brandRed py-2 px-4  rounded-sm text-sm md:text-md mr-4 md:mr-2 hover:scale-105 h-fit"
                   key={item.name}
                   target="_blank"
                 >
@@ -181,9 +178,9 @@ function OurStory() {
  * }}
  */
 
-function canvasArt() {
+export function canvasArt() {
   return (
-    <div className="absolute -right-4 top-[0%] -z-10 overflow-hidden h-[100vh] flex flex-col justify-center ">
+    <div className="absolute -right-4 top-[0%] -z-10 overflow-hidden h-[60vh] flex flex-col justify-center ">
       <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
       <div className="bg-brandRed w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
       <div className="bg-[black] w-[150vw] h-2 -rotate-[5deg] mb-4"></div>
@@ -199,12 +196,11 @@ function canvasArt() {
     </div>
   );
 }
-function RecommendedProducts({products}) {
+
+export const ProductCarousel = ({products}) => {
   const [data, setdata] = useState([]);
   const carouselDiv = useRef();
-
   const moveRight = () => {
-    console.log('right move', carouselDiv);
     carouselDiv.current.scrollLeft +=
       carouselDiv.current.scrollWidth / products.nodes.length;
   };
@@ -212,28 +208,85 @@ function RecommendedProducts({products}) {
     carouselDiv.current.scrollLeft -=
       carouselDiv.current.scrollWidth / products.nodes.length;
   };
-  // const slider = setInterval(() => {
-  //   console.log('slider_____', runtrack);
-  //   if (runtrack == true) {
-  //     moveRight();
-  //     if (
-  //       carouselDiv.current.scrollLeft >=
-  //       carouselDiv.current.scrollWidth - carouselDiv.current.clientWidth
-  //     ) {
-  //       carouselDiv.current.style.scrollBehavior = 'unset';
-  //       carouselDiv.current.scrollLeft = 0;
-  //       carouselDiv.current.style.scrollBehavior = 'smooth';
-  //     }
-  //   }
-  // }, 5000);
   useEffect(() => {
-    setdata((prev) => [...prev, ...products.nodes]);
-    if (carouselDiv.current) {
-      carouselDiv.current.scrollLeft = 200;
+    try {
+      setdata((prev) => [...prev, ...products.nodes]);
+      if (carouselDiv.current) {
+        carouselDiv.current.scrollLeft = 200;
+      }
+    } catch (err) {
+      setdata([]);
     }
   }, []);
   return (
-    <div className="min-h-screen  my-4">
+    <Suspense fallback={<div>Loading...</div>}>
+      <Await resolve={data}>
+        <div
+          ref={carouselDiv}
+          className="flex  w-[100%] overflow-hidden items-center flex-nowrap transition-all relative min-h-[65vh]"
+        >
+          {data.map(({description, title, id, images, handle, priceRange}) => {
+            const {url} = images.nodes[0];
+            return (
+              <div
+                key={id}
+                className="min-w-[16em] backdrop-blur-sm bg-[#ffffffca] mx-3 shadow-[2px_2px_20px_#aaaaaa97]  rounded-md hover:scale-105 transition-all scale-y-95 z-10 "
+              >
+                <img
+                  src={url}
+                  alt="service image"
+                  className="h-[15em] w-full object-cover"
+                />
+                <div className="px-4 relative py-3 ">
+                  <h1 className="font-extrabold text-xl text-black line-clamp-1">
+                    {title}
+                  </h1>
+                  <p className=" text-xs font-extralight text-ellipsis text-wrap line-clamp-3 h-12">
+                    {description}
+                  </p>
+                  <Link
+                    to={`/products/${handle
+                      .split(' ')
+                      .join('-')
+                      .toLowerCase()}`}
+                    className="bg-black text-brandRed text-md py-2 px-4 mt-2 rounded-full flex items-center justify-between"
+                  >
+                    SUBSCRIBE{' '}
+                    <span className="flex">
+                      {priceRange.minVariantPrice.amount}
+                      {priceRange.minVariantPrice.currencyCode}
+                      <HiArrowRight className="text-xl mx-1" />
+                    </span>
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="absolute w-full top-[40%] left-0">
+          <div className="flex absolute  z-30 w-full justify-between ">
+            <button
+              onClick={moveLeft}
+              className=" bg-brandRed rounded-full py-4 px-1 text-black  hover:h-[6em] hover:w-[3em] rounded-l-none transition-all h-14"
+            >
+              <HiArrowLeft className="text-2xl " />
+            </button>
+            <button
+              className=" bg-brandRed rounded-full py-4 px-1 text-black hover:h-[6em] hover:w-[3em] rounded-r-none transition-all h-14"
+              onClick={moveRight}
+            >
+              <HiArrowRight className="text-2xl " />
+            </button>
+          </div>
+        </div>
+      </Await>
+    </Suspense>
+  );
+};
+
+export function RecommendedProducts({products}) {
+  return (
+    <div className="  my-12">
       <h2 className="text-3xl font-extrabold mt-[2em] text-center font-[PoppinsBold] text-black">
         Our Services
       </h2>
@@ -256,58 +309,7 @@ function RecommendedProducts({products}) {
       {/* background art */}
       <div className="relative overflow-hidden ">
         {canvasArt()}
-        <Suspense fallback={<div>Loading...</div>}>
-          <Await resolve={products}>
-            <div
-              ref={carouselDiv}
-              className="flex  w-[100%] overflow-hidden items-center md:min-h-screen flex-nowrap transition-all relative"
-            >
-              {data.map(({description, title, id, images}) => {
-                const {url} = images.nodes[0];
-                return (
-                  <div
-                    key={id}
-                    className="min-w-[16em] backdrop-blur-sm bg-[#ffffffca] mx-3 shadow-[2px_2px_20px_#aaaaaa97]  rounded-md hover:scale-105 transition-all scale-y-95 z-10 "
-                  >
-                    <img
-                      src={url}
-                      alt="service image"
-                      className="h-[15em] w-full object-cover"
-                    />
-                    <div className="px-4 relative py-3 ">
-                      <h1 className="font-extrabold text-xl text-black line-clamp-1">
-                        {title}
-                      </h1>
-                      <p className=" text-xs font-extralight text-ellipsis text-wrap line-clamp-3 h-12">
-                        {description}
-                      </p>
-                      <button className="bg-black text-brandRed text-md py-2 px-4 mt-2 rounded-full flex items-center">
-                        SUBSCRIBE
-                        <HiArrowRight className="text-xl mx-1" />
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="absolute w-full min-h-screen bg-black">
-              <div className="flex absolute -top-[50%] z-30 w-full justify-between">
-                <button
-                  onClick={moveLeft}
-                  className=" bg-brandRed rounded-full py-4 px-1 text-black  hover:h-[6em] hover:w-[3em] rounded-l-none transition-all h-12"
-                >
-                  <HiArrowLeft className="text-xl mx-1" />
-                </button>
-                <button
-                  className=" bg-brandRed rounded-full py-4 px-1 text-black hover:h-[6em] hover:w-[3em] rounded-r-none transition-all h-12"
-                  onClick={moveRight}
-                >
-                  <HiArrowRight className="text-xl mx-1" />
-                </button>
-              </div>
-            </div>
-          </Await>
-        </Suspense>
+        <ProductCarousel products={products} />
       </div>
     </div>
   );
@@ -391,7 +393,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
 `;
 
 const PRODUCT_QUERY = `#graphql
- query Products {
+query Products {
   products(first: 20) {
     nodes {
       id
@@ -403,6 +405,14 @@ const PRODUCT_QUERY = `#graphql
           url
         }
       }
+      tags
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+      handle
     }
   }
 }`;

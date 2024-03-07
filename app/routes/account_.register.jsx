@@ -101,11 +101,16 @@ export default function Register() {
   const data = useActionData();
   const error = data?.error || null;
   return (
-    <div className="login">
-      <h1>Register.</h1>
-      <Form method="POST">
+    <div className="relative grid mt-[6em] min-h-[60vh] justify-items-center bg-black px-12 w-fit mx-auto rounded-lg items-center text-white">
+      <div
+        style={{clipPath: 'polygon(100% 0, 100% 0, 100% 100%, 0% 100%)'}}
+        className="bg-brandRed h-[100%] w-[100%] absolute z-10 top-0 right-0"
+      ></div>
+      <Form method="POST" className="z-[100]">
+        <h1 className="text-3xl font-[PoppinsBold] text-center mb-2">
+          Register.
+        </h1>
         <fieldset>
-          <label htmlFor="email">Email address</label>
           <input
             id="email"
             name="email"
@@ -114,10 +119,9 @@ export default function Register() {
             required
             placeholder="Email address"
             aria-label="Email address"
-            // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus
+            className="rounded-full py-2 px-4 focus:outline-none bg-[inherit] text-white placeholder:text-white hover:scale-105"
           />
-          <label htmlFor="password">Password</label>
+
           <input
             id="password"
             name="password"
@@ -125,17 +129,18 @@ export default function Register() {
             autoComplete="current-password"
             placeholder="Password"
             aria-label="Password"
+            className="rounded-full py-2 px-4 outline-none focus:outline-none bg-[inherit] text-white placeholder:text-white mt-4 hover:scale-105"
             minLength={8}
             required
           />
-          <label htmlFor="passwordConfirm">Re-enter password</label>
           <input
             id="passwordConfirm"
             name="passwordConfirm"
             type="password"
             autoComplete="current-password"
             placeholder="Re-enter password"
-            aria-label="Re-enter password"
+            aria-label="Password"
+            className="rounded-full py-2 px-4 outline-none focus:outline-none bg-[inherit] text-white placeholder:text-white mt-4 hover:scale-105"
             minLength={8}
             required
           />
@@ -149,12 +154,21 @@ export default function Register() {
         ) : (
           <br />
         )}
-        <button type="submit">Register</button>
+        <button
+          type="submit"
+          className="bg-white w-full py-2 text-center text-brandRed rounded-full font-black border-[2px] hover:border-white hover:bg-black hover:scale-105 shadow-xl
+          "
+        >
+          Register
+        </button>
+        <div className="mt-2 flex justify-between ">
+          <p>
+            <Link to="/account/login" className="text-white">
+              Login →
+            </Link>
+          </p>
+        </div>
       </Form>
-      <br />
-      <p>
-        <Link to="/account/login">Login →</Link>
-      </p>
     </div>
   );
 }
